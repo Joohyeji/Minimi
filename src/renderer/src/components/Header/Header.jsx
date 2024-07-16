@@ -6,8 +6,8 @@ function Header() {
   return (
     <header className="h-20 flex justify-between items-center backdrop-blur-sm bg-white/30">
       <img src={homeLogo} alt="logo" className="h-3/4" />
-      {/* <Search /> */}
-      {/* <UserInfo /> */}
+      <Search />
+      <UserInfo />
     </header>
   )
 }
