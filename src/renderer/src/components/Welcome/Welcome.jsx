@@ -6,12 +6,15 @@ import Input from './Input'
 function Welcome() {
   const navigate = useNavigate()
 
+  const handleLogInClick = () => {
+    navigate('/dashboard')
+  }
   const handleJoinInClick = () => {
     navigate('/signin')
   }
 
   return (
-    <div className="flex flex-col justify-between justify-center w-full h-full items-center mt-10 gap-10 px-24">
+    <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-10 px-24">
       <h1 className="text-5xl font-black">Welcome to MNM</h1>
       <p className="text-center text-neutral-500 text-base font-normal">
         MNM 은 개인 맞춤형 PC 환경을 제공하는 서비스입니다. <br />
@@ -35,12 +38,15 @@ function Welcome() {
             keep me logged in
           </label>
         </div>
-        <button className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg font-bold hover:bg-neutral-700">
+        <button
+          onClick={handleLogInClick}
+          className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg font-bold hover:bg-neutral-700"
+        >
           Log in
         </button>
         <button
-          className="block h-12 min-w-96 rounded-xl shadow-lg font-bold hover:bg-gray-50"
           onClick={handleJoinInClick}
+          className="block h-12 min-w-96 rounded-xl shadow-lg font-bold hover:bg-gray-50"
         >
           Join in
         </button>
