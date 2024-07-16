@@ -3,14 +3,16 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header/Header'
 import Welcome from './components/Welcome/Welcome'
 import SignIn from './components/Welcome/SignIn'
+
 import Dashboard from './components/Dashboard/Dashboard'
 import MyMinimies from './components/Dashboard/MyMinimies'
 import ExploreMore from './components/Dashboard/ExploreMore'
+import CreateMinimi from './components/CreateMinimi/CreateMinimi'
 
 function App() {
   return (
     <Router>
-      <div className="px-7 pt-5 h-auto">
+      <div className="px-7 pt-5 h-full">
         <Header />
         <div className="mt-20">
           <Routes>
@@ -20,6 +22,7 @@ function App() {
               <Route path="myminimies" element={<MyMinimies />} />
               <Route path="explore" element={<ExploreMore />} />
             </Route>
+            <Route path="/createminimi" element={<CreateMinimi />} />
           </Routes>
         </div>
       </div>

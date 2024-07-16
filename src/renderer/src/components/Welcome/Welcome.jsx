@@ -7,7 +7,7 @@ function Welcome() {
   const navigate = useNavigate()
 
   const handleLogInClick = () => {
-    navigate('/dashboard')
+    navigate('/dashboard/myminimies')
   }
   const handleJoinInClick = () => {
     navigate('/signin')
