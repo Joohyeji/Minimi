@@ -1,11 +1,12 @@
-import Versions from './components/Versions'
+import Header from './components/Header/Header'
+import Welcome from './components/Welcome/Welcome'
 
 function App() {
   return (
-    <>
-      <h1>Hello</h1>
-      <Versions></Versions>
-    </>
+    <div className="px-7 pt-5 h-auto">
+      <Header />
+      <Welcome />
+    </div>
   )
 }
 
