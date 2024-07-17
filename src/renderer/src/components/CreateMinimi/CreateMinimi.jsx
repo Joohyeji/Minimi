@@ -21,12 +21,18 @@ function CreateMinimi() {
         <section className="mt-5 w-full flex flex-col gap-5 pb-5 overflow-auto h-[680px]">
           <SettingInput />
           <SettingInput />
+          <SettingInput />
+          <SettingInput />
+          <SettingInput />
+          <SettingInput />
+          <SettingInput />
+          <SettingInput />
         </section>
         <button className="fix absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700">
           DONE .
         </button>
       </div>
-      <div className="absolute right-0 h-full w-2/5 bg-gray-200 -mt-20"></div>
+      <div className="ml-5 h-[900px] w-2/5 bg-gray-200 -mt-20"></div>
     </div>
   )
 }
