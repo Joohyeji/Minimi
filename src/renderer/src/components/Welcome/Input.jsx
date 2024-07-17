@@ -1,16 +1,23 @@
-import ErrorText from '../Common/ErrorText'
+import PropTypes from 'prop-types'
 
-function Input() {
+function Input({ type, placeholder, onChange }) {
   return (
     <div>
       <input
-        type="text"
-        placeholder="Enter email address"
+        type={type}
+        placeholder={placeholder}
         className="w-full h-12 bg-gray-100 rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gray-300"
+        onChange={onChange}
+        required
       />
-      {/* <ErrorText /> */}
     </div>
   )
+}
+
+Input.propTypes = {
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func
 }
 
 export default Input
