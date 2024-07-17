@@ -14,7 +14,7 @@ function App() {
     <Router>
       <div className="px-7 pt-5 h-full">
         <Header />
-        <div className="mt-20">
+        <div className="mt-20 pb-20">
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/signin" element={<SignIn />} />
