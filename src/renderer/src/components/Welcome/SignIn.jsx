@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../firebase'
 
@@ -12,9 +12,38 @@ function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordCheck, setPasswordCheck] = useState('')
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmitSignIn = async (e) => {
     e.preventDefault()
+
+    if (password !== passwordCheck) {
+      alert('Passwords do not match')
+      return
+    }
+
+    try {
+      const createdUser = await createUserWithEmailAndPassword(auth, email, password)
+      console.log('회원가입 성공', createdUser)
+
+      alert('회원가입에 성공하셨습니다. 로그인 해주세요.')
+      navigate('/')
+    } catch (err) {
+      switch (err.code) {
+        case 'auth/invalid-email':
+          alert('이메일을 바르게 입력해주세요.')
+          break
+        case 'auth/weak-password':
+          alert('비밀번호가 너무 쉬워요.')
+          break
+        case 'auth/email-already-in-use':
+          alert('등록된 이메일 입니다.')
+          break
+        default:
+          console.log('회원가입 실패', err)
+          break
+      }
+    }
   }
 
   return (
@@ -23,7 +52,7 @@ function SignIn() {
       <GoogleBtn />
       <p className="text-neutral-500">or</p>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitSignIn}
         className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4"
       >
         <Input

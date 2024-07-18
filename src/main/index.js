@@ -16,6 +16,8 @@ function createWindow() {
     }
   })
 
+  mainWindow.loadURL('https://google.co.kr', { userAgent: 'Chrome' })
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
