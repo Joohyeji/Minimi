@@ -1,14 +1,43 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../firebase'
 
 import GoogleBtn from './GoogleBtn'
 import Input from './Input'
 
 function Welcome() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogInClick = () => {
-    navigate('/dashboard/myminimies')
+  const handleLogInSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+      console.log('로그인 성공', user)
+
+      navigate('/dashboard/myminimies')
+    } catch (err) {
+      switch (err.code) {
+        case 'auth/user-not-found':
+          alert('사용자를 찾을 수 없습니다.')
+          break
+        case 'auth/wrong-password':
+          alert('잘못된 비밀번호입니다.')
+          break
+        case 'auth/invalid-email':
+          alert('이메일을 바르게 입력해주세요.')
+          break
+        default:
+          console.log('로그인 실패', err)
+          break
+      }
+    }
   }
+
   const handleJoinInClick = () => {
     navigate('/signin')
   }
@@ -22,9 +51,22 @@ function Welcome() {
       </p>
       <GoogleBtn />
       <p className="text-gray-500">or</p>
-      <form className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4">
-        <Input />
-        <Input />
+      <form
+        onSubmit={handleLogInSubmit}
+        className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4"
+      >
+        <Input
+          type="email"
+          placeholder="Enter email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          type="password"
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -38,10 +80,7 @@ function Welcome() {
             keep me logged in
           </label>
         </div>
-        <button
-          onClick={handleLogInClick}
-          className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg font-bold hover:bg-neutral-700"
-        >
+        <button className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg font-bold hover:bg-neutral-700">
           Log in
         </button>
         <button

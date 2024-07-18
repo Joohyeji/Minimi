@@ -27,6 +27,7 @@ function SignIn() {
       console.log('회원가입 성공', createdUser)
 
       alert('회원가입에 성공하셨습니다. 로그인 해주세요.')
+
       navigate('/')
     } catch (err) {
       switch (err.code) {
