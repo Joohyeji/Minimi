@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
-import useAuthStore from '../../store/auth'
+
+import useAuthStore from '../../store/useAuthStore'
 import deleteIcon from '../../assets/img/delete_icon.png'
 
 function Dashbaord() {

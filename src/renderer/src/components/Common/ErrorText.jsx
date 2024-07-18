@@ -1,5 +1,11 @@
-function ErrorText() {
-  return <p className="-mt-3 px-3 text-red-500 text-sm font-light">The password is different.</p>
+import PropTypes from 'prop-types'
+
+function ErrorText({ message }) {
+  return <p className="-mt-3 px-3 text-red-500 text-sm font-light">{message}</p>
+}
+
+ErrorText.propTypes = {
+  message: PropTypes.string
 }
 
 export default ErrorText
