@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../firebase'
+import useErrorStore from '../../store/useErrorStore'
 
 import GoogleBtn from './GoogleBtn'
 import Input from './Input'
@@ -11,28 +12,36 @@ function Welcome() {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
+  const setVisible = useErrorStore((state) => state.setVisible)
+  const setToastMessage = useErrorStore((state) => state.setToastMessage)
+
   const handleLogInSubmit = async (e) => {
     e.preventDefault()
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-      console.log('로그인 성공', user)
+
+      setToastMessage('You have successfully logged in')
+      setVisible(true)
 
       navigate('/dashboard/myminimies')
     } catch (err) {
       switch (err.code) {
         case 'auth/user-not-found':
-          alert('사용자를 찾을 수 없습니다.')
+          setToastMessage('The user was not found')
+          setVisible(true)
           break
         case 'auth/wrong-password':
-          alert('잘못된 비밀번호입니다.')
+          setToastMessage('Invalid password')
+          setVisible(true)
           break
         case 'auth/invalid-email':
-          alert('이메일을 바르게 입력해주세요.')
+          setToastMessage('Enter your email correctly')
+          setVisible(true)
           break
         default:
-          console.log('로그인 실패', err)
+          setToastMessage('The user does not exist. Please register')
+          setVisible(true)
           break
       }
     }

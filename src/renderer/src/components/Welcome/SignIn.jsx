@@ -18,6 +18,8 @@ function SignIn() {
   const [passwordCheck, setPasswordCheck] = useState('')
   const navigate = useNavigate()
 
+  const setVisible = useErrorStore((state) => state.setVisible)
+  const setToastMessage = useErrorStore((state) => state.setToastMessage)
   const setErrorText = useErrorStore((state) => state.setErrorText)
   const errorText = useErrorStore((state) => state.errorText)
 
@@ -57,7 +59,8 @@ function SignIn() {
         password
       })
 
-      alert('회원가입에 성공하셨습니다. 로그인 해주세요.')
+      setToastMessage('You are signed up')
+      setVisible(true)
 
       navigate('/')
     } catch (err) {
@@ -72,7 +75,8 @@ function SignIn() {
           setErrorText('email', 'Email already registered')
           break
         default:
-          console.log('회원가입 실패', err)
+          setToastMessage('An error occurred')
+          setVisible(true)
           break
       }
     }
