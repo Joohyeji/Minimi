@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard/Dashboard'
 import MyMinimies from './components/Dashboard/MyMinimies'
 import ExploreMore from './components/Dashboard/ExploreMore'
 import CreateMinimi from './components/CreateMinimi/CreateMinimi'
+import ToastMessage from './components/Common/ToastMessage'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/createminimi" element={<CreateMinimi />} />
           </Routes>
         </div>
+        <ToastMessage />
       </div>
     </Router>
   )
