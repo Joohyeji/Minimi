@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../firebase'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+import { auth, USER_COLLECTION } from '../../firebase'
 
 import GoogleBtn from './GoogleBtn'
 import Input from './Input'
@@ -24,7 +25,16 @@ function SignIn() {
 
     try {
       const createdUser = await createUserWithEmailAndPassword(auth, email, password)
-      console.log('회원가입 성공', createdUser)
+
+      await updateProfile(auth.currentUser, {
+        displayName: name
+      })
+      await setDoc(doc(USER_COLLECTION, createdUser.user.uid), {
+        uid: createdUser.user.uid,
+        name,
+        email,
+        password
+      })
 
       alert('회원가입에 성공하셨습니다. 로그인 해주세요.')
 

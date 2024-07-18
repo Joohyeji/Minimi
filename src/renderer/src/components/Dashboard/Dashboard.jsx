@@ -1,7 +1,31 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { auth } from '../../firebase'
+import useAuthStore from '../../store/auth'
 import deleteIcon from '../../assets/img/delete_icon.png'
 
 function Dashbaord() {
+  const setUser = useAuthStore((state) => state.setUser)
+  const user = useAuthStore((state) => state.user)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        setUser(currentUser)
+      } else {
+        setUser(null)
+        navigate('/signin')
+      }
+    })
+
+    return () => unsubscribe()
+  }, [setUser])
+
+  if (!user) {
+    return <div>Loading...</div>
+  }
+
   return (
     <>
       <h1 className="text-5xl font-bold -mt-5">Dashboard</h1>
