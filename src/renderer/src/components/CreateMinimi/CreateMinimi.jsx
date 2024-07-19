@@ -19,7 +19,7 @@ function CreateMinimi() {
           <button onClick={handlePrevBtnClick} className="relative hover:translate-x-[-10px]">
             <img src={prev_icon} />
           </button>
-          <h1 className="ml-6 text-5xl font-bold ">Make new Minimi</h1>
+          <h1 className="ml-6 text-4xl font-bold ">Make new Minimi</h1>
         </div>
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-[680px]">
           <SettingInput />
@@ -31,7 +31,7 @@ function CreateMinimi() {
             <SettingCard />
           </div>
         </section>
-        <button className="fix bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700">
+        <button className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700">
           DONE .
         </button>
       </div>

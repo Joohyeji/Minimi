@@ -25,12 +25,12 @@ function Dashbaord() {
   }, [setUser])
 
   if (!user) {
-    return <Loading></Loading>
+    return <Loading />
   }
 
   return (
     <>
-      <h1 className="text-5xl font-bold -mt-5">Dashboard</h1>
+      <h1 className="text-4xl font-bold -mt-5">Dashboard</h1>
       <nav className="flex w-full gap-20 mt-5">
         <NavLink
           to="myminimies"
