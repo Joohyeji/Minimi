@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -12,11 +12,21 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      contextIsolation: true,
+      enableRemoteModule: false
     }
   })
 
-  mainWindow.loadURL('https://google.co.kr', { userAgent: 'Chrome' })
+  mainWindow.loadURL('https://localhost:5173')
+  // 권한 설정을 처리할 수 있는 방법을 추가합니다.
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'geolocation') {
+      callback(true)
+    } else {
+      callback(false)
+    }
+  })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -43,6 +53,7 @@ app.whenReady().then(() => {
 
   ipcMain.on('ping', () => console.log('pong'))
 
+  process.env.GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY
   createWindow()
 
   app.on('activate', function () {
