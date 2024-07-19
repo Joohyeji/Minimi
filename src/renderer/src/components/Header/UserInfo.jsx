@@ -8,8 +8,7 @@ import logoutIcon from '../../assets/img/logout_icon.png'
 function UserInfo({ userName }) {
   const navigate = useNavigate()
 
-  const setToastMessage = useErrorStore((state) => state.setToastMessage)
-  const setVisible = useErrorStore((state) => state.setErrorText)
+  const { setToastMessage, setVisible } = useErrorStore()
 
   const handleLogOutClick = async () => {
     try {
