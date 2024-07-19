@@ -16,11 +16,11 @@ function UserInfo({ userName }) {
     try {
       await auth.signOut()
       clearUser()
-      setToastMessage('You are logged Out')
+      setToastMessage('로그아웃되었습니다.')
       setVisible(true)
       navigate('/')
     } catch (err) {
-      setToastMessage('Logout Failed')
+      setToastMessage('로그아웃 중 오류가 발생했습니다.')
       setVisible(true)
     }
   }

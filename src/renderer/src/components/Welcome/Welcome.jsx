@@ -21,26 +21,23 @@ function Welcome() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
 
-      setToastMessage('You have successfully logged in')
+      setToastMessage('로그인 되었습니다.')
       setVisible(true)
 
       navigate('/dashboard/myminimies')
     } catch (err) {
       switch (err.code) {
         case 'auth/user-not-found':
-          setToastMessage('The user was not found')
-          setVisible(true)
+          setToastMessage('이메일을 확인해주세요.')
           break
         case 'auth/wrong-password':
-          setToastMessage('Invalid password')
-          setVisible(true)
+          setToastMessage('비밀번호를 확인해주세요.')
           break
         case 'auth/invalid-email':
-          setToastMessage('Enter your email correctly')
-          setVisible(true)
+          setToastMessage('이메일이 올바르지 않습니다.')
           break
         default:
-          setToastMessage('The user does not exist. Please register')
+          setToastMessage('존재하지않는 사용자입니다. 회원가입을 먼저 해주세요.')
           setVisible(true)
           break
       }

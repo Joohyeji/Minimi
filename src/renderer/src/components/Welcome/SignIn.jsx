@@ -29,17 +29,17 @@ function SignIn() {
     setErrorText('passwordCheck', '')
 
     if (!validateName(name)) {
-      setErrorText('name', 'Nicknames can be no more than 20 letters and numbers with no spaces')
+      setErrorText('name', '닉네임은 20자 이하이며, 공백이 존재하지 않아야합니다.')
       return
     }
 
     if (!validatePassword(password)) {
-      setErrorText('password', 'Passwords cannot contain spaces')
+      setErrorText('password', '비밀번호에 공백을 포함할 수 없습니다.')
       return
     }
 
     if (password !== passwordCheck) {
-      setErrorText('passwordCheck', 'Passwords do not match')
+      setErrorText('passwordCheck', '비밀번호가 일치하지 않습니다.')
       return
     }
 
@@ -56,23 +56,23 @@ function SignIn() {
         password
       })
 
-      setToastMessage('You are signed up')
+      setToastMessage('회원가입되었습니다.')
       setVisible(true)
 
       navigate('/')
     } catch (err) {
       switch (err.code) {
         case 'auth/invalid-email':
-          setErrorText('email', 'Enter your email correctly')
+          setErrorText('email', '이메일을 확인해주세요.')
           break
         case 'auth/weak-password':
-          setErrorText('password', 'Password must be at least 6 characters long')
+          setErrorText('password', '비밀번호는 6자 이상이어야합니다.')
           break
         case 'auth/email-already-in-use':
-          setErrorText('email', 'Email already registered')
+          setErrorText('email', '이미 등록된 이메일입니다.')
           break
         default:
-          setToastMessage('An error occurred')
+          setToastMessage('오류가 발생했습니다.')
           setVisible(true)
           break
       }
