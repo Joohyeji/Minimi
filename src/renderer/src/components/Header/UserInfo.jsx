@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 import useErrorStore from '../../store/useErrorStore'
+import useAuthStore from '../../store/useAuthStore'
 
 import logoutIcon from '../../assets/img/logout_icon.png'
 
@@ -9,10 +10,12 @@ function UserInfo({ userName }) {
   const navigate = useNavigate()
 
   const { setToastMessage, setVisible } = useErrorStore()
+  const { clearUser } = useAuthStore()
 
   const handleLogOutClick = async () => {
     try {
       await auth.signOut()
+      clearUser()
       setToastMessage('You are logged Out')
       setVisible(true)
       navigate('/')
