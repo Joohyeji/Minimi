@@ -19,7 +19,6 @@ function createWindow() {
   })
 
   mainWindow.loadURL('https://localhost:5173')
-  // 권한 설정을 처리할 수 있는 방법을 추가합니다.
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
     if (permission === 'geolocation') {
       callback(true)
