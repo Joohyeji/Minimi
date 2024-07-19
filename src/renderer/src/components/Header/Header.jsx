@@ -9,7 +9,7 @@ function Header() {
   const userName = isLoggedIn ? user.displayName : ''
 
   return (
-    <header className="h-20 flex justify-between items-center backdrop-blur-sm bg-white/30 sticky top-0 z-10">
+    <header className="px-12 h-20 flex justify-between items-center backdrop-blur-sm bg-white/30 sticky top-0 z-10">
       <img src={homeLogo} alt="logo" className="h-full" />
       {isLoggedIn && (
         <>

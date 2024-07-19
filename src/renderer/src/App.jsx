@@ -13,9 +13,9 @@ import ToastMessage from './components/Common/ToastMessage'
 function App() {
   return (
     <Router>
-      <div className="px-12 pt-5 h-full">
+      <div className="pt-5 h-full">
         <Header />
-        <div className="mt-20">
+        <div className="px-12 mt-20">
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/signin" element={<SignIn />} />
