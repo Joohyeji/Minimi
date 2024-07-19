@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
+import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
 
 function CreateMinimi() {
@@ -10,6 +11,7 @@ function CreateMinimi() {
   const handlePrevBtnClick = () => {
     navigate(-1)
   }
+
   return (
     <div className="flex">
       <div className="w-3/5">
@@ -33,7 +35,9 @@ function CreateMinimi() {
           DONE .
         </button>
       </div>
-      <div className="ml-5 h-[900px] w-2/5 bg-gray-200 -mt-20 -mr-7"></div>
+      <div className="ml-5 h-[900px] w-2/5 bg-gray-100 -mt-20 -mr-7">
+        <Map />
+      </div>
     </div>
   )
 }
