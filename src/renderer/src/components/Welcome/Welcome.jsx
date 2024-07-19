@@ -52,7 +52,7 @@ function Welcome() {
   }
 
   return (
-    <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-10 px-24">
+    <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-10 px-24 pb-20">
       <h1 className="text-5xl font-black">Welcome to MNM</h1>
       <p className="text-center text-neutral-500 text-base font-normal">
         MNM 은 개인 맞춤형 PC 환경을 제공하는 서비스입니다. <br />
