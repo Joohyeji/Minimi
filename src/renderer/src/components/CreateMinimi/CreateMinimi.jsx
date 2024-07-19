@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import SettingInput from './SettingInput'
@@ -6,20 +7,40 @@ import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
 
 function CreateMinimi() {
+  const [isHovered, setIsHovered] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
   const navigate = useNavigate()
 
   const handlePrevBtnClick = () => {
     navigate(-1)
   }
 
+  const handleTooltip = () => {
+    setIsHovered(true)
+    setShowTooltip(true)
+  }
+
+  useEffect(() => {
+    let timer
+    if (isHovered) {
+      timer = setTimeout(() => {
+        setShowTooltip(false)
+        setIsHovered(false)
+      }, 3000)
+    } else {
+      setShowTooltip(false)
+    }
+    return () => clearTimeout(timer)
+  }, [isHovered])
+
   return (
     <div className="flex">
       <div className="w-3/5">
         <div className="flex items-center -mt-5 relative">
           <button onClick={handlePrevBtnClick} className="relative hover:translate-x-[-10px]">
-            <img src={prev_icon} />
+            <img src={prev_icon} alt="Previous Icon" />
           </button>
-          <h1 className="ml-6 text-4xl font-bold ">Make new Minimi</h1>
+          <h1 className="ml-6 text-4xl font-bold">Make new Minimi</h1>
         </div>
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-[680px]">
           <SettingInput />
@@ -35,7 +56,21 @@ function CreateMinimi() {
           DONE .
         </button>
       </div>
-      <div className="ml-5 h-[900px] w-2/5 bg-gray-100 -mt-20 -mr-7">
+      <div className="relative ml-5 h-[900px] w-2/5 bg-gray-100 -mt-20 -mr-7">
+        <button
+          onMouseEnter={handleTooltip}
+          onMouseLeave={() => setIsHovered(false)}
+          className="absolute right-4 top-4 z-10 px-2 text-sm font-light bg-black/50 rounded-full text-white flex items-center justify-center hover:bg-black"
+        >
+          현재 위치가 아닌가요?
+        </button>
+        <div
+          className={`absolute right-4 top-10 mb-2 bg-gray-800 text-white text-center text-sm font-regular rounded py-1 px-2 z-20 transition-opacity duration-300 ${
+            showTooltip ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          맵을 클릭해 현재 위치를 바꿀 수 있습니다.
+        </div>
         <Map />
       </div>
     </div>
