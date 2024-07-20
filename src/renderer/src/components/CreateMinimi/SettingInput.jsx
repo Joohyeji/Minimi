@@ -79,7 +79,7 @@ function SettingInput({ setting }) {
             <span className="text-lg pr-3">{setting}</span>
             {renderInput()}
           </div>
-          <ErrorText message={errorText.minimiName} />
+          {!setting && <ErrorText message={errorText.minimiName} />}
         </div>
         <button onClick={handleXBtnClick} className="h-10 hover:rotate-90">
           {setting ? <img src={x_icon} alt="x-button" className="h-full" /> : null}
