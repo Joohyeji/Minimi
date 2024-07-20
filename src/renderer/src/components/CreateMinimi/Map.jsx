@@ -1,26 +1,37 @@
-import { useEffect, useState, useRef } from 'react'
-import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api'
+import { useEffect, useRef } from 'react'
+import { GoogleMap, useJsApiLoader, MarkerF, Circle } from '@react-google-maps/api'
 import useErrorStore from '../../store/useErrorStore'
-
+import useMinimiStore from '../../store/useMinimiStore'
 import Loading from '../Common/Loading'
+import markerIcon from '../../../src/assets/img/marker_icon.svg'
 
 function Map() {
-  const [markerPosition, setMarkerPosition] = useState(null)
   const mapRef = useRef(null)
 
   const { setToastMessage, setVisible } = useErrorStore()
+  const { markerPosition, setMarkerPosition } = useMinimiStore()
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY
   })
 
+  const circleOptions = {
+    strokeColor: '#000000',
+    strokeOpacity: 0.8,
+    strokeWeight: 1,
+    fillColor: '#92fc4c',
+    fillOpacity: 0.35,
+    radius: 5
+  }
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords
-          setMarkerPosition({ lat: latitude, lng: longitude })
+          const newPosition = { lat: latitude, lng: longitude }
+          setMarkerPosition(newPosition)
         },
         (error) => {
           switch (error.code) {
@@ -44,23 +55,19 @@ function Map() {
       setToastMessage('Geolocation을 지원하지 않는 브라우저입니다.')
       setVisible(true)
     }
-  }, [])
+  }, [setToastMessage, setVisible])
 
   const handleMapClick = (e) => {
     const { latLng } = e
-    setMarkerPosition({
+    const newPosition = {
       lat: latLng.lat(),
       lng: latLng.lng()
-    })
+    }
+    setMarkerPosition(newPosition)
   }
 
   const handleMapLoad = (map) => {
     mapRef.current = map
-    if (markerPosition) {
-      const bounds = new window.google.maps.LatLngBounds()
-      bounds.extend(markerPosition)
-      map.fitBounds(bounds)
-    }
   }
 
   const mapContainerStyle = {
@@ -90,7 +97,14 @@ function Map() {
           onClick={handleMapClick}
           options={options}
         >
-          <MarkerF position={markerPosition} />
+          <Circle center={markerPosition} options={circleOptions} />
+          <MarkerF
+            position={markerPosition}
+            icon={{
+              url: markerIcon,
+              scaledSize: new window.google.maps.Size(40, 40)
+            }}
+          />
         </GoogleMap>
       ) : (
         <Loading />

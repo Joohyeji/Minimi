@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import useMinimiStore from '../../store/useMinimiStore'
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
 import Map from './Map'
@@ -11,6 +11,8 @@ function CreateMinimi() {
   const [showTooltip, setShowTooltip] = useState(false)
   const navigate = useNavigate()
 
+  const { markerPosition } = useMinimiStore()
+
   const handlePrevBtnClick = () => {
     navigate(-1)
   }
@@ -18,6 +20,10 @@ function CreateMinimi() {
   const handleTooltip = () => {
     setIsHovered(true)
     setShowTooltip(true)
+  }
+
+  const handleDoneBtnClick = () => {
+    console.log('저장된 현재 위치', markerPosition)
   }
 
   useEffect(() => {
@@ -52,11 +58,14 @@ function CreateMinimi() {
             <SettingCard />
           </div>
         </section>
-        <button className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700">
+        <button
+          onClick={handleDoneBtnClick}
+          className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700"
+        >
           DONE .
         </button>
       </div>
-      <div className="relative ml-5 h-[900px] w-2/5 bg-gray-100 -mt-20 -mr-7">
+      <div className="relative ml-5 w-2/5 h-[680px] bg-gray-100 -mt-20 -mr-7">
         <button
           onMouseEnter={handleTooltip}
           onMouseLeave={() => setIsHovered(false)}
