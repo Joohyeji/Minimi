@@ -2,18 +2,21 @@ import { useEffect, useRef } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, Circle } from '@react-google-maps/api'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
+
 import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
+import { GOOGLE_MAPS_LIBRARIES } from '../../constants/googleMaps'
 
 function Map() {
   const mapRef = useRef(null)
 
   const { setToastMessage, setVisible } = useErrorStore()
-  const { markerPosition, setMarkerPosition } = useMinimiStore()
+  const { markerPosition, setMarkerPosition, placeName, setPlaceName } = useMinimiStore()
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+    libraries: GOOGLE_MAPS_LIBRARIES
   })
 
   const circleOptions = {
@@ -32,6 +35,7 @@ function Map() {
           const { latitude, longitude } = position.coords
           const newPosition = { lat: latitude, lng: longitude }
           setMarkerPosition(newPosition)
+          fetchPlaceName(newPosition)
         },
         (error) => {
           switch (error.code) {
@@ -55,7 +59,7 @@ function Map() {
       setToastMessage('Geolocation을 지원하지 않는 브라우저입니다.')
       setVisible(true)
     }
-  }, [setToastMessage, setVisible])
+  }, [])
 
   const handleMapClick = (e) => {
     const { latLng } = e
@@ -64,6 +68,24 @@ function Map() {
       lng: latLng.lng()
     }
     setMarkerPosition(newPosition)
+    fetchPlaceName(newPosition)
+    setToastMessage('이 위치로 변경되었습니다.')
+    setVisible(true)
+  }
+
+  const fetchPlaceName = (position) => {
+    const geocoder = new window.google.maps.Geocoder()
+    geocoder.geocode({ location: position }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        setPlaceName(results[0].formatted_address)
+      } else {
+        setPlaceName('')
+      }
+    })
+  }
+
+  const handlePlace = () => {
+    console.log(placeName)
   }
 
   const handleMapLoad = (map) => {
@@ -99,10 +121,11 @@ function Map() {
         >
           <Circle center={markerPosition} options={circleOptions} />
           <MarkerF
+            onClick={handlePlace}
             position={markerPosition}
             icon={{
               url: markerIcon,
-              scaledSize: new window.google.maps.Size(40, 40)
+              scaledSize: new window.google.maps.Size(32, 32)
             }}
           />
         </GoogleMap>

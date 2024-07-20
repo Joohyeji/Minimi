@@ -3,6 +3,7 @@ import { create } from 'zustand'
 const useMinimiStore = create((set) => ({
   nowLocation: { lat: '', lng: '' },
   markerPosition: null,
+  placeName: '',
   minimiSetting: {
     uid: '',
     minimiId: '',
@@ -14,7 +15,8 @@ const useMinimiStore = create((set) => ({
     }
   },
 
-  setMarkerPosition: (markerPosition) => set({ markerPosition: markerPosition })
+  setMarkerPosition: (markerPosition) => set({ markerPosition: markerPosition }),
+  setPlaceName: (address) => set({ placeName: address })
 }))
 
 export default useMinimiStore
