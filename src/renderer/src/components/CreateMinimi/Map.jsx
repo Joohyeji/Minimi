@@ -84,10 +84,6 @@ function Map() {
     })
   }
 
-  const handlePlace = () => {
-    console.log(placeName)
-  }
-
   const handleMapLoad = (map) => {
     mapRef.current = map
   }
@@ -121,7 +117,6 @@ function Map() {
         >
           <Circle center={markerPosition} options={circleOptions} />
           <MarkerF
-            onClick={handlePlace}
             position={markerPosition}
             icon={{
               url: markerIcon,

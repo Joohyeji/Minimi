@@ -9,6 +9,9 @@ const useMinimiStore = create((set) => ({
   markerPosition: null,
   placeName: '',
 
+  minimiVolume: 0,
+  minimiBrightness: 0,
+
   minimiName: '',
   minimiSetting: {
     uid: '',
@@ -37,9 +40,12 @@ const useMinimiStore = create((set) => ({
     set((state) => ({
       settingCardLists: state.settingCardLists.filter((item) => item !== cardText)
     })),
+
   setMarkerPosition: (markerPosition) => set({ markerPosition: markerPosition }),
   setPlaceName: (address) => set({ placeName: address }),
-  setMinimiName: (name) => set({ minimiName: name })
+  setMinimiName: (name) => set({ minimiName: name }),
+  setMinimiVolume: (volume) => set({ minimiVolume: volume }),
+  setMinimiBrightness: (brightness) => set({ minimiBrightness: brightness })
 }))
 
 export default useMinimiStore
