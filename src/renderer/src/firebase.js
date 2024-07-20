@@ -19,5 +19,6 @@ const db = getFirestore(app)
 
 const googleProvider = new GoogleAuthProvider()
 const USER_COLLECTION = collection(db, 'users')
+const MINIMIES_COLLECTION = collection(db, 'minimies')
 
-export { auth, db, googleProvider, USER_COLLECTION }
+export { auth, db, googleProvider, USER_COLLECTION, MINIMIES_COLLECTION }

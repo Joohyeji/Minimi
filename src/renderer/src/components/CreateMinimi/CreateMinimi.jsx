@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { doc, setDoc } from 'firebase/firestore'
+import { MINIMIES_COLLECTION } from '../../firebase'
+import { isWhitespace } from '../../utils/validation'
+
+import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
@@ -11,7 +16,16 @@ function CreateMinimi() {
   const [showTooltip, setShowTooltip] = useState(false)
   const navigate = useNavigate()
 
-  const { markerPosition } = useMinimiStore()
+  const { setErrorText } = useErrorStore()
+  const {
+    markerPosition,
+    placeName,
+    minimiName,
+    settingInputLists,
+    settingCardLists,
+    initSettingInputLists,
+    initSettingCardLists
+  } = useMinimiStore()
 
   const handlePrevBtnClick = () => {
     navigate(-1)
@@ -22,9 +36,24 @@ function CreateMinimi() {
     setShowTooltip(true)
   }
 
-  const handleDoneBtnClick = () => {
+  const handleDoneBtnClick = async () => {
     console.log('저장된 현재 위치', markerPosition)
+    console.log('저장된 현재 위치', placeName)
+    console.log('미니미이름', minimiName)
+
+    setErrorText('minimiName', '')
+
+    if (isWhitespace(minimiName)) {
+      setErrorText('minimiName', '공백만으로 이루어질 수 없습니다.')
+      return
+    }
   }
+
+  useEffect(() => {
+    setErrorText('minimiName', '')
+    initSettingInputLists()
+    initSettingCardLists()
+  }, [])
 
   useEffect(() => {
     let timer
@@ -50,12 +79,13 @@ function CreateMinimi() {
         </div>
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-[680px]">
           <SettingInput />
+          {settingInputLists.map((setting, index) => (
+            <SettingInput key={index} setting={setting} />
+          ))}
           <div className="flex justify-center w-10/12 gap-8">
-            <SettingCard />
-            <SettingCard />
-            <SettingCard />
-            <SettingCard />
-            <SettingCard />
+            {settingCardLists.map((cardText, index) => (
+              <SettingCard key={index} cardText={cardText} />
+            ))}
           </div>
         </section>
         <button

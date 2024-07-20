@@ -5,7 +5,7 @@ import useMinimiStore from '../../store/useMinimiStore'
 
 import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
-import { GOOGLE_MAPS_LIBRARIES } from '../../constants/googleMaps'
+import { GOOGLE_MAPS_LIBRARIES } from '../../constants/constants'
 
 function Map() {
   const mapRef = useRef(null)

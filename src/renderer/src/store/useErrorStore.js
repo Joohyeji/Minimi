@@ -8,7 +8,8 @@ const useErrorStore = create((set) => ({
     name: '',
     email: '',
     password: '',
-    passwordCheck: ''
+    passwordCheck: '',
+    minimiName: ''
   },
 
   setLoading: (loading) => set({ isLoading: loading }),

@@ -7,3 +7,7 @@ export const validatePassword = (password) => {
   const passwordRegex = /^\S*$/
   return passwordRegex.test(password)
 }
+
+export const isWhitespace = (text) => {
+  return text.trim() === ''
+}
