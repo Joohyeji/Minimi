@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { useEffect } from 'react'
 
 import ErrorText from '../Common/ErrorText'
 import useErrorStore from '../../store/useErrorStore'
@@ -11,6 +12,8 @@ function SettingInput({ setting }) {
     setMinimiName,
     removeFromInputLists,
     addSettingCardLists,
+    minimiBrightness,
+    setMinimiBrightness,
     minimiVolume,
     setMinimiVolume
   } = useMinimiStore()
@@ -21,9 +24,13 @@ function SettingInput({ setting }) {
     setMinimiName(minimiName)
   }
 
-  const handleChangeRange = (e) => {
+  const handleChangeVolume = (e) => {
     const minimiVolume = e.target.value
     setMinimiVolume(minimiVolume)
+  }
+  const handleChangeBrightness = (e) => {
+    const minimiBrightness = e.target.value
+    setMinimiBrightness(minimiBrightness)
   }
 
   const handleXBtnClick = () => {
@@ -31,11 +38,32 @@ function SettingInput({ setting }) {
     addSettingCardLists(setting)
   }
 
+  useEffect(() => {
+    const getBrightness = async () => {
+      const currentBrightness = await window.api.getBrightness()
+      if (currentBrightness !== null) {
+        setMinimiBrightness(currentBrightness * 100)
+      }
+    }
+
+    getBrightness()
+  }, [])
+
   const renderInput = () => {
     switch (setting) {
       case 'Brightness':
         return (
-          <input type="range" min="0" max="100" className="w-full" onChange={handleChangeInput} />
+          <>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
+              onChange={handleChangeBrightness}
+              value={minimiBrightness}
+            />
+            <p className="text-sm font-light ml-2 mt-1">{minimiBrightness}</p>
+          </>
         )
       case 'Volume':
         return (
@@ -45,7 +73,7 @@ function SettingInput({ setting }) {
               min="0"
               max="100"
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
-              onChange={handleChangeRange}
+              onChange={handleChangeVolume}
             />
             <p className="text-sm font-light ml-2 mt-1">{minimiVolume}</p>
           </>

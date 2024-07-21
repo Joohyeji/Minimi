@@ -3,6 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+const brightness = require('brightness')
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -48,6 +50,26 @@ app.whenReady().then(() => {
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
+  })
+
+  ipcMain.handle('get-brightness', async () => {
+    try {
+      const currentBrightness = await brightness.get()
+      return currentBrightness
+    } catch (error) {
+      console.error('Error getting brightness:', error)
+      return null
+    }
+  })
+
+  ipcMain.handle('set-brightness', async (event, level) => {
+    try {
+      await brightness.set(level)
+      return true
+    } catch (error) {
+      console.error('Error setting brightness:', error)
+      return false
+    }
   })
 
   ipcMain.on('ping', () => console.log('pong'))

@@ -23,6 +23,7 @@
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@react-google-maps/api": "^2.19.3",
+    "brightness": "^3.0.0",
     "electron-updater": "^6.1.7",
     "firebase": "^10.12.3",
     "react-router-dom": "^6.24.1",

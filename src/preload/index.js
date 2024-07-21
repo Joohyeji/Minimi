@@ -1,7 +1,10 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-const api = {}
+const api = {
+  getBrightness: () => ipcRenderer.invoke('get-brightness'),
+  setBrightness: (level) => ipcRenderer.invoke('set-brightness', level)
+}
 
 if (process.contextIsolated) {
   try {
