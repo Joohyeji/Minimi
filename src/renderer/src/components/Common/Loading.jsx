@@ -1,6 +1,6 @@
 function Loading() {
   return (
-    <div className="grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible">
+    <div className="absolute inset-0 flex items-center justify-center">
       <svg
         className="w-12 h-12 text-gray-300 animate-spin"
         viewBox="0 0 64 64"
