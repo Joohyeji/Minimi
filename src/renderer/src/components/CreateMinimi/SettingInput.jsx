@@ -24,13 +24,14 @@ function SettingInput({ setting }) {
     setMinimiName(minimiName)
   }
 
-  const handleChangeVolume = (e) => {
-    const minimiVolume = e.target.value
-    setMinimiVolume(minimiVolume)
-  }
   const handleChangeBrightness = (e) => {
     const minimiBrightness = e.target.value
     setMinimiBrightness(minimiBrightness)
+  }
+
+  const handleChangeVolume = (e) => {
+    const minimiVolume = e.target.value
+    setMinimiVolume(minimiVolume)
   }
 
   const handleXBtnClick = () => {
@@ -46,7 +47,13 @@ function SettingInput({ setting }) {
       }
     }
 
+    const getVolume = async () => {
+      const currentVolume = await window.api.getVolume()
+      setMinimiVolume(currentVolume)
+    }
+
     getBrightness()
+    getVolume()
   }, [])
 
   const renderInput = () => {
@@ -60,7 +67,7 @@ function SettingInput({ setting }) {
               max="100"
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
               onChange={handleChangeBrightness}
-              value={minimiBrightness}
+              value={minimiBrightness || 50}
             />
             <p className="text-sm font-light ml-2 mt-1">{minimiBrightness}</p>
           </>
@@ -74,6 +81,7 @@ function SettingInput({ setting }) {
               max="100"
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
               onChange={handleChangeVolume}
+              value={minimiVolume || 50}
             />
             <p className="text-sm font-light ml-2 mt-1">{minimiVolume}</p>
           </>

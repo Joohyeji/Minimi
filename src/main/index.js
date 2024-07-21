@@ -3,7 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-const brightness = require('brightness')
+import brightness from 'brightness'
+import loudness from 'loudness'
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -68,6 +69,26 @@ app.whenReady().then(() => {
       return true
     } catch (error) {
       console.error('Error setting brightness:', error)
+      return false
+    }
+  })
+
+  ipcMain.handle('get-volume', async () => {
+    try {
+      const currentVolume = await loudness.getVolume()
+      return currentVolume
+    } catch (error) {
+      console.error('Error getting volume:', error)
+      return null
+    }
+  })
+
+  ipcMain.handle('set-volume', async (event, level) => {
+    try {
+      await loudness.setVolume(level)
+      return true
+    } catch (error) {
+      console.error('Error setting volume:', error)
       return false
     }
   })
