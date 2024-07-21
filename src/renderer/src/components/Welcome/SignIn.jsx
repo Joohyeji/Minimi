@@ -49,6 +49,7 @@ function SignIn() {
       await updateProfile(auth.currentUser, {
         displayName: name
       })
+
       await setDoc(doc(USER_COLLECTION, createdUser.user.uid), {
         uid: createdUser.user.uid,
         name,

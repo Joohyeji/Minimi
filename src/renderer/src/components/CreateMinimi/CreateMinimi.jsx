@@ -51,7 +51,7 @@ function CreateMinimi() {
     }
 
     const minimiData = {
-      user: user.uid,
+      user: user,
       title: minimiName,
       location: markerPosition,
       address: placeName,
