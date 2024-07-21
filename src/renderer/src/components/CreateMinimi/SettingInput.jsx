@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
 
 import ErrorText from '../Common/ErrorText'
 import useErrorStore from '../../store/useErrorStore'
@@ -37,24 +36,15 @@ function SettingInput({ setting }) {
   const handleXBtnClick = () => {
     removeFromInputLists(setting)
     addSettingCardLists(setting)
+
+    if (setting === 'Brightness') {
+      setMinimiBrightness(null)
+    }
+
+    if (setting === 'Volume') {
+      setMinimiVolume(null)
+    }
   }
-
-  useEffect(() => {
-    const getBrightness = async () => {
-      const currentBrightness = await window.api.getBrightness()
-      if (currentBrightness !== null) {
-        setMinimiBrightness(currentBrightness * 100)
-      }
-    }
-
-    const getVolume = async () => {
-      const currentVolume = await window.api.getVolume()
-      setMinimiVolume(currentVolume)
-    }
-
-    getBrightness()
-    getVolume()
-  }, [])
 
   const renderInput = () => {
     switch (setting) {

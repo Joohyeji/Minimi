@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { doc, setDoc } from 'firebase/firestore'
-import { MINIMIES_COLLECTION } from '../../firebase'
+import { doc, setDoc, collection } from 'firebase/firestore'
+import { MINIMIES_COLLECTION, db } from '../../firebase'
 import { isWhitespace } from '../../utils/validation'
 
+import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import SettingInput from './SettingInput'
@@ -16,7 +17,8 @@ function CreateMinimi() {
   const [showTooltip, setShowTooltip] = useState(false)
   const navigate = useNavigate()
 
-  const { setErrorText } = useErrorStore()
+  const { user } = useAuthStore()
+  const { setErrorText, setVisible, setToastMessage } = useErrorStore()
   const {
     markerPosition,
     placeName,
@@ -24,7 +26,11 @@ function CreateMinimi() {
     settingInputLists,
     settingCardLists,
     initSettingInputLists,
-    initSettingCardLists
+    initSettingCardLists,
+    minimiBrightness,
+    setMinimiBrightness,
+    minimiVolume,
+    resetMinimiData
   } = useMinimiStore()
 
   const handlePrevBtnClick = () => {
@@ -37,15 +43,38 @@ function CreateMinimi() {
   }
 
   const handleDoneBtnClick = async () => {
-    console.log('저장된 현재 위치', markerPosition)
-    console.log('저장된 현재 위치', placeName)
-    console.log('미니미이름', minimiName)
-
     setErrorText('minimiName', '')
 
     if (isWhitespace(minimiName)) {
       setErrorText('minimiName', '공백만으로 이루어질 수 없습니다.')
       return
+    }
+
+    const minimiData = {
+      user: user.uid,
+      title: minimiName,
+      location: markerPosition,
+      address: placeName,
+      volume: minimiVolume,
+      brightness: minimiBrightness
+    }
+
+    try {
+      const newMyMinimi = collection(db, 'users', user.uid, 'minimies')
+
+      const newMinimi = doc(MINIMIES_COLLECTION)
+      const newPostRef = doc(newMyMinimi)
+
+      await setDoc(newPostRef, minimiData)
+      await setDoc(newMinimi, minimiData)
+
+      setToastMessage('성공적으로 저장되었습니다.')
+      setVisible(true)
+
+      navigate('/dashboard/myminimies')
+    } catch (error) {
+      setToastMessage(`저장 중 오류가 발생했습니다. ${error}`)
+      setVisible(true)
     }
   }
 
@@ -53,6 +82,10 @@ function CreateMinimi() {
     setErrorText('minimiName', '')
     initSettingInputLists()
     initSettingCardLists()
+
+    return () => {
+      resetMinimiData()
+    }
   }, [])
 
   useEffect(() => {

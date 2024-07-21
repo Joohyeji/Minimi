@@ -2,11 +2,30 @@ import PropTypes from 'prop-types'
 import useMinimiStore from '../../store/useMinimiStore'
 
 function SettingCard({ cardText }) {
-  const { addSettingInputLists, removeFromSettingCardLists } = useMinimiStore()
+  const { addSettingInputLists, removeFromSettingCardLists, setMinimiBrightness, setMinimiVolume } =
+    useMinimiStore()
 
   const handleSettingCardClick = () => {
     removeFromSettingCardLists(cardText)
     addSettingInputLists(cardText)
+
+    if (cardText === 'Brightness') {
+      const getBrightness = async () => {
+        const currentBrightness = await window.api.getBrightness()
+        if (currentBrightness !== null) {
+          setMinimiBrightness(currentBrightness * 100)
+        }
+      }
+      getBrightness()
+    }
+
+    if (cardText === 'Volume') {
+      const getVolume = async () => {
+        const currentVolume = await window.api.getVolume()
+        setMinimiVolume(currentVolume)
+      }
+      getVolume()
+    }
   }
   return (
     <button

@@ -9,20 +9,9 @@ const useMinimiStore = create((set) => ({
   markerPosition: null,
   placeName: '',
 
-  minimiVolume: 0,
-  minimiBrightness: 0,
-
   minimiName: '',
-  minimiSetting: {
-    uid: '',
-    minimiId: '',
-    setting: {
-      name: '',
-      location: { lat: '', lng: '' },
-      volume: 0,
-      brightness: 0
-    }
-  },
+  minimiVolume: null,
+  minimiBrightness: null,
 
   initSettingInputLists: () => set({ settingInputLists: [] }),
   initSettingCardLists: () => set({ settingCardLists: SETTING_CARD_LISTS }),
@@ -45,7 +34,15 @@ const useMinimiStore = create((set) => ({
   setPlaceName: (address) => set({ placeName: address }),
   setMinimiName: (name) => set({ minimiName: name }),
   setMinimiVolume: (volume) => set({ minimiVolume: volume }),
-  setMinimiBrightness: (brightness) => set({ minimiBrightness: brightness })
+  setMinimiBrightness: (brightness) => set({ minimiBrightness: brightness }),
+  resetMinimiData: () =>
+    set({
+      markerPosition: null,
+      minimiName: '',
+      placeName: '',
+      minimiVolume: null,
+      minimiBrightness: null
+    })
 }))
 
 export default useMinimiStore
