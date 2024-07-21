@@ -7,14 +7,16 @@ import useErrorStore from '../../store/useErrorStore'
 
 import MinimiCard from './MinimiCard'
 import CreateMinimiCard from './CreateMinimiCard'
+import Loading from '../Common/Loading'
 
 function MyMinimies() {
   const { user } = useAuthStore()
   const { minimiPosts, setMinimiPosts } = usePostsStore()
-  const { isToastVisible, setToastMessage } = useErrorStore()
+  const { setVisible, setToastMessage, isLoading, setLoading } = useErrorStore()
 
   const fetchUserMinimies = async (userId) => {
     try {
+      setLoading(true)
       const myMinimiesRef = collection(db, 'users', userId, 'minimies')
       const myMinimies = await getDocs(myMinimiesRef)
       const myMinimiesData = myMinimies.docs.map((doc) => ({
@@ -23,9 +25,10 @@ function MyMinimies() {
       }))
 
       setMinimiPosts(myMinimiesData)
+      setLoading(false)
     } catch (error) {
       setToastMessage('Minimi 가져오기에 실패했습니다.')
-      isToastVisible(true)
+      setVisible(true)
     }
   }
 
@@ -35,9 +38,11 @@ function MyMinimies() {
 
   return (
     <div className="mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto py-5 h-[564px]">
-      {minimiPosts.map((minimi) => (
-        <MinimiCard key={minimi.id} {...minimi} />
-      ))}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        minimiPosts.map((minimi) => <MinimiCard key={minimi.id} {...minimi} />)
+      )}
       <CreateMinimiCard />
     </div>
   )

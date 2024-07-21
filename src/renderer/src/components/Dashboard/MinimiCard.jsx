@@ -1,9 +1,14 @@
 import PropTypes from 'prop-types'
+import useMinimiStore from '../../store/useMinimiStore'
 
-function MinimiCard({ address, title }) {
+function MinimiCard({ id, address, title }) {
+  const { closestMinimi } = useMinimiStore()
+
   return (
     <article className="h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden p-5">
-      <div className="w-full absolute left-0 top-0 bg-minimi-green h-[20px]"></div>
+      {id === closestMinimi?.id && (
+        <div className="w-full absolute left-0 top-0 bg-minimi-green h-[20px]"></div>
+      )}
       <div className="flex flex-row-reverse mt-2 text-neutral-500 font-medium">
         <p>nickname</p>
       </div>
@@ -16,6 +21,7 @@ function MinimiCard({ address, title }) {
 }
 
 MinimiCard.propTypes = {
+  id: PropTypes.string.isRequired,
   address: PropTypes.string,
   title: PropTypes.string
 }

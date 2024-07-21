@@ -13,6 +13,8 @@ const useMinimiStore = create((set) => ({
   minimiVolume: null,
   minimiBrightness: null,
 
+  closestMinimi: null,
+
   initSettingInputLists: () => set({ settingInputLists: [] }),
   initSettingCardLists: () => set({ settingCardLists: SETTING_CARD_LISTS }),
   addSettingInputLists: (list) =>
@@ -42,7 +44,8 @@ const useMinimiStore = create((set) => ({
       placeName: '',
       minimiVolume: null,
       minimiBrightness: null
-    })
+    }),
+  setClosestMinimi: (minimi) => set({ closestMinimi: minimi })
 }))
 
 export default useMinimiStore
