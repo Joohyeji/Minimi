@@ -32,6 +32,7 @@ function Map() {
 
   useEffect(() => {
     setMarkerPosition(nowLocation)
+    fetchPlaceName(nowLocation)
   }, [])
 
   const handleMapClick = (e) => {
