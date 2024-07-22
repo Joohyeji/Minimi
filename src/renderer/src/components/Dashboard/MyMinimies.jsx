@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { getDocs, collection } from 'firebase/firestore'
-import { db } from '../../firebase'
+import { getDocs, query, where } from 'firebase/firestore'
+import { MINIMIES_COLLECTION } from '../../firebase'
 import useAuthStore from '../../store/useAuthStore'
 import usePostsStore from '../../store/usePostsStore'
 import useErrorStore from '../../store/useErrorStore'
@@ -17,8 +17,10 @@ function MyMinimies() {
   const fetchUserMinimies = async (userId) => {
     try {
       setLoading(true)
-      const myMinimiesRef = collection(db, 'users', userId, 'minimies')
-      const myMinimies = await getDocs(myMinimiesRef)
+
+      const myMinimiesQuery = query(MINIMIES_COLLECTION, where('uid', '==', userId))
+
+      const myMinimies = await getDocs(myMinimiesQuery)
       const myMinimiesData = myMinimies.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()

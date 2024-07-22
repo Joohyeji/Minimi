@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
 
 function MinimiCard({ id, address, title, brightness, volume }) {
+  const navigate = useNavigate()
+
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
   const { setVisible, setToastMessage } = useErrorStore()
 
@@ -40,8 +43,15 @@ function MinimiCard({ id, address, title, brightness, volume }) {
     }
   }, [closestMinimi])
 
+  const handleCardClick = () => {
+    navigate(`/createminimi/${id}`)
+  }
+
   return (
-    <article className="h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden p-5">
+    <article
+      onClick={handleCardClick}
+      className="h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden p-5"
+    >
       {id === closestMinimi?.id && (
         <div className="w-full absolute left-0 top-0 bg-minimi-green h-[20px]"></div>
       )}

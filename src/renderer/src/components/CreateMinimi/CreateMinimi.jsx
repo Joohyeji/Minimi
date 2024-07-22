@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { doc, setDoc, collection } from 'firebase/firestore'
-import { MINIMIES_COLLECTION, db } from '../../firebase'
+import { useNavigate, useParams } from 'react-router-dom'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { MINIMIES_COLLECTION } from '../../firebase'
 import { isWhitespace } from '../../utils/validation'
 
 import useAuthStore from '../../store/useAuthStore'
@@ -15,9 +15,12 @@ import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
 
 function CreateMinimi() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+
   const [isHovered, setIsHovered] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
-  const navigate = useNavigate()
+  const [existingMinimiData, setExistingMinimiData] = useState(null)
 
   const { user } = useAuthStore()
   const { setErrorText, setVisible, setToastMessage } = useErrorStore()
@@ -65,6 +68,7 @@ function CreateMinimi() {
     }
 
     const minimiData = {
+      uid: user.uid,
       user: user.displayName,
       title: minimiName,
       location: markerPosition,
@@ -75,13 +79,13 @@ function CreateMinimi() {
     }
 
     try {
-      const newMyMinimi = collection(db, 'users', user.uid, 'minimies')
-
-      const newMinimi = doc(MINIMIES_COLLECTION)
-      const newPostRef = doc(newMyMinimi)
-
-      await setDoc(newPostRef, minimiData)
-      await setDoc(newMinimi, minimiData)
+      if (id) {
+        const minimiDocRef = doc(MINIMIES_COLLECTION, id)
+        await setDoc(minimiDocRef, minimiData)
+      } else {
+        const newMinimi = doc(MINIMIES_COLLECTION)
+        await setDoc(newMinimi, minimiData)
+      }
 
       setToastMessage('성공적으로 저장되었습니다.')
       setVisible(true)
@@ -95,13 +99,34 @@ function CreateMinimi() {
 
   useEffect(() => {
     setErrorText('minimiName', '')
-    initSettingInputLists()
-    initSettingCardLists()
+
+    if (!id) {
+      initSettingInputLists()
+      initSettingCardLists()
+    } else {
+      const fecthMinimiData = async () => {
+        try {
+          const minimiDocRef = doc(MINIMIES_COLLECTION, id)
+          const minimiDoc = await getDoc(minimiDocRef)
+
+          if (minimiDoc.exists()) {
+            setExistingMinimiData(minimiDoc.data())
+          } else {
+            setToastMessage('해당 Minimi가 존재하지 않습니다.')
+            setVisible(true)
+          }
+        } catch (error) {
+          setToastMessage(`Minimi 데이터를 가져오는 중 오류가 발생했습니다: ${error}`)
+          setVisible(true)
+        }
+      }
+      fecthMinimiData()
+    }
 
     return () => {
       resetMinimiData()
     }
-  }, [])
+  }, [id])
 
   useEffect(() => {
     let timer

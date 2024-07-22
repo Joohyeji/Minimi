@@ -24,6 +24,7 @@ function App() {
               <Route path="explore" element={<ExploreMore />} />
             </Route>
             <Route path="/createminimi" element={<CreateMinimi />} />
+            <Route path="/createminimi/:id" element={<CreateMinimi />} />
           </Routes>
         </div>
         <ToastMessage />
