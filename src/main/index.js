@@ -93,6 +93,16 @@ app.whenReady().then(() => {
     }
   })
 
+  ipcMain.handle('set-muted', async (event, level) => {
+    try {
+      await loudness.setMuted(level)
+      return true
+    } catch (error) {
+      console.error('Error setting volume:', error)
+      return false
+    }
+  })
+
   ipcMain.on('ping', () => console.log('pong'))
 
   process.env.GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY

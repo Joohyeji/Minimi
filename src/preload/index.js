@@ -5,7 +5,8 @@ const api = {
   getBrightness: () => ipcRenderer.invoke('get-brightness'),
   setBrightness: (level) => ipcRenderer.invoke('set-brightness', level),
   getVolume: () => ipcRenderer.invoke('get-volume'),
-  setVolume: (level) => ipcRenderer.invoke('set-volume', level)
+  setVolume: (level) => ipcRenderer.invoke('set-volume', level),
+  setMuted: (mute) => ipcRenderer.invoke('set-muted', mute)
 }
 
 if (process.contextIsolated) {
