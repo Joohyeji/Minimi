@@ -11,7 +11,7 @@ function Map() {
   const mapRef = useRef(null)
 
   const { setToastMessage, setVisible } = useErrorStore()
-  const { markerPosition, setMarkerPosition, placeName, setPlaceName } = useMinimiStore()
+  const { markerPosition, setMarkerPosition, setPlaceName } = useMinimiStore()
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -23,13 +23,13 @@ function Map() {
     strokeColor: '#000000',
     strokeOpacity: 0.8,
     strokeWeight: 1,
-    fillColor: '#92fc4c',
+    fillColor: '#B3F289',
     fillOpacity: 0.35,
     radius: 5
   }
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (navigator.geolocation && isLoaded) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords
@@ -55,11 +55,11 @@ function Map() {
           }
         }
       )
-    } else {
-      setToastMessage('Geolocation을 지원하지 않는 브라우저입니다.')
+    } else if (!navigator.geolocation) {
+      setToastMessage('현재 위치를 찾을 수 없습니다.')
       setVisible(true)
     }
-  }, [])
+  }, [isLoaded])
 
   const handleMapClick = (e) => {
     const { latLng } = e
@@ -74,14 +74,18 @@ function Map() {
   }
 
   const fetchPlaceName = (position) => {
-    const geocoder = new window.google.maps.Geocoder()
-    geocoder.geocode({ location: position }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        setPlaceName(results[0].formatted_address)
-      } else {
-        setPlaceName('')
-      }
-    })
+    if (window.google && window.google.maps) {
+      const geocoder = new window.google.maps.Geocoder()
+      geocoder.geocode({ location: position }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          setPlaceName(results[0].formatted_address)
+        } else {
+          setPlaceName('')
+        }
+      })
+    } else {
+      console.error('Google Maps API가 로드되지 않았습니다.')
+    }
   }
 
   const handleMapLoad = (map) => {
