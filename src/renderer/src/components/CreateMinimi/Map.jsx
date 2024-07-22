@@ -2,14 +2,16 @@ import { useEffect, useRef } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, Circle } from '@react-google-maps/api'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
+import useAuthStore from '../../store/useAuthStore'
 
 import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
-import { GOOGLE_MAPS_LIBRARIES } from '../../constants/constants'
+import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE } from '../../constants/constants'
 
 function Map() {
   const mapRef = useRef(null)
 
+  const { nowLocation } = useAuthStore()
   const { setToastMessage, setVisible } = useErrorStore()
   const { markerPosition, setMarkerPosition, setPlaceName } = useMinimiStore()
 
@@ -29,37 +31,8 @@ function Map() {
   }
 
   useEffect(() => {
-    if (navigator.geolocation && isLoaded) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          const newPosition = { lat: latitude, lng: longitude }
-          setMarkerPosition(newPosition)
-          fetchPlaceName(newPosition)
-        },
-        (error) => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              setToastMessage(`사용자가 위치 정보 제공을 거부했습니다. ${error}`)
-              break
-            case error.POSITION_UNAVAILABLE:
-              setToastMessage(`위치 정보를 사용할 수 없습니다. ${error}`)
-              break
-            case error.TIMEOUT:
-              setToastMessage(`위치 정보 요청이 타임아웃되었습니다. ${error}`)
-              break
-            default:
-              setToastMessage(`위치 정보 요청 중 오류가 발생했습니다. ${error}`)
-              setVisible(true)
-              break
-          }
-        }
-      )
-    } else if (!navigator.geolocation) {
-      setToastMessage('현재 위치를 찾을 수 없습니다.')
-      setVisible(true)
-    }
-  }, [isLoaded])
+    setMarkerPosition(nowLocation)
+  }, [])
 
   const handleMapClick = (e) => {
     const { latLng } = e
@@ -124,7 +97,7 @@ function Map() {
             position={markerPosition}
             icon={{
               url: markerIcon,
-              scaledSize: new window.google.maps.Size(32, 32)
+              scaledSize: new window.google.maps.Size(PIN_SIZE, PIN_SIZE)
             }}
           />
         </GoogleMap>

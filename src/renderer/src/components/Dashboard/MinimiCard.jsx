@@ -4,7 +4,7 @@ import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
 
 function MinimiCard({ id, address, title, brightness, volume }) {
-  const { closestMinimi } = useMinimiStore()
+  const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
   const { setVisible, setToastMessage } = useErrorStore()
 
   const changeBrightness = async (level) => {
@@ -22,22 +22,23 @@ function MinimiCard({ id, address, title, brightness, volume }) {
 
   useEffect(() => {
     const updateComputerSetting = async () => {
-      if (id === closestMinimi?.id) {
-        if (brightness !== null) {
-          await changeBrightness(brightness * 0.01)
-        }
-        if (volume !== null) {
-          await changeVolume(volume)
-        }
+      if (brightness !== null) {
+        await changeBrightness(brightness * 0.01)
+      }
+      if (volume !== null) {
+        await changeVolume(volume)
       }
     }
 
-    if (closestMinimi) {
-      updateComputerSetting()
-      setToastMessage(`${title} 세팅으로 적용되었습니다.`)
-      setVisible(true)
+    if (id === closestMinimi?.id) {
+      if (closestMinimi?.id !== prevClosestMinimi?.id) {
+        updateComputerSetting()
+        setToastMessage(`${title} 세팅으로 적용되었습니다.`)
+        setVisible(true)
+      }
+      setPrevClosestMinimi(closestMinimi)
     }
-  }, [])
+  }, [closestMinimi])
 
   return (
     <article className="h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden p-5">

@@ -5,7 +5,6 @@ const useMinimiStore = create((set) => ({
   settingCardLists: SETTING_CARD_LISTS,
   settingInputLists: [],
 
-  nowLocation: { lat: '', lng: '' },
   markerPosition: null,
   placeName: '',
 
@@ -13,6 +12,7 @@ const useMinimiStore = create((set) => ({
   minimiVolume: null,
   minimiBrightness: null,
 
+  prevClosestMinimi: null,
   closestMinimi: null,
 
   initSettingInputLists: () => set({ settingInputLists: [] }),
@@ -45,6 +45,7 @@ const useMinimiStore = create((set) => ({
       minimiVolume: null,
       minimiBrightness: null
     }),
+  setPrevClosestMinimi: (minimi) => set({ prevClosestMinimi: minimi }),
   setClosestMinimi: (minimi) => set({ closestMinimi: minimi })
 }))
 
