@@ -30,6 +30,21 @@ function Map() {
     radius: 5
   }
 
+  const fetchPlaceName = (position) => {
+    if (window.google && window.google.maps) {
+      const geocoder = new window.google.maps.Geocoder()
+      geocoder.geocode({ location: position }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          setPlaceName(results[0].formatted_address)
+        } else {
+          setPlaceName('')
+        }
+      })
+    } else {
+      console.error('Google Maps API가 로드되지 않았습니다.')
+    }
+  }
+
   useEffect(() => {
     setMarkerPosition(nowLocation)
     fetchPlaceName(nowLocation)
@@ -45,21 +60,6 @@ function Map() {
     fetchPlaceName(newPosition)
     setToastMessage('이 위치로 변경되었습니다.')
     setVisible(true)
-  }
-
-  const fetchPlaceName = (position) => {
-    if (window.google && window.google.maps) {
-      const geocoder = new window.google.maps.Geocoder()
-      geocoder.geocode({ location: position }, (results, status) => {
-        if (status === 'OK' && results[0]) {
-          setPlaceName(results[0].formatted_address)
-        } else {
-          setPlaceName('')
-        }
-      })
-    } else {
-      console.error('Google Maps API가 로드되지 않았습니다.')
-    }
   }
 
   const handleMapLoad = (map) => {
