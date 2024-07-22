@@ -14,23 +14,30 @@ function SettingInput({ setting }) {
     minimiBrightness,
     setMinimiBrightness,
     minimiVolume,
-    setMinimiVolume
+    setMinimiVolume,
+    wallpaper,
+    setWallpaper
   } = useMinimiStore()
   const { errorText } = useErrorStore()
 
-  const handleChangeInput = (e) => {
+  const handleInputChange = (e) => {
     const minimiName = e.target.value
     setMinimiName(minimiName)
   }
 
-  const handleChangeBrightness = (e) => {
+  const handleBrightnessChange = (e) => {
     const minimiBrightness = e.target.value
     setMinimiBrightness(minimiBrightness)
   }
 
-  const handleChangeVolume = (e) => {
+  const handleVolumeChange = (e) => {
     const minimiVolume = e.target.value
     setMinimiVolume(minimiVolume)
+  }
+
+  const handleWallpaperChange = (e) => {
+    const file = e.target.files[0]
+    setWallpaper(file)
   }
 
   const handleXBtnClick = () => {
@@ -44,6 +51,10 @@ function SettingInput({ setting }) {
     if (setting === 'Volume') {
       setMinimiVolume(null)
     }
+
+    if (setting === 'Wallpaper') {
+      setWallpaper(null)
+    }
   }
 
   const renderInput = () => {
@@ -56,7 +67,7 @@ function SettingInput({ setting }) {
               min="0"
               max="100"
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
-              onChange={handleChangeBrightness}
+              onChange={handleBrightnessChange}
               value={minimiBrightness || 50}
             />
             <p className="text-sm font-light ml-2 mt-1">{minimiBrightness}</p>
@@ -70,20 +81,35 @@ function SettingInput({ setting }) {
               min="0"
               max="100"
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
-              onChange={handleChangeVolume}
+              onChange={handleVolumeChange}
               value={minimiVolume || 50}
             />
             <p className="text-sm font-light ml-2 mt-1">{minimiVolume}</p>
           </>
         )
-      case 'WallPaper':
+      case 'Wallpaper':
         return (
-          <input
-            type="text"
-            placeholder="Enter wallpaper URL"
-            className="w-full border-b-2 outline-none font-bold focus:border-black"
-            onChange={handleChangeInput}
-          />
+          <div className="w-full flex flex-col">
+            <div className="flex w-full justify-end relative">
+              <p className="text-sm font-medium leading-7 text-neutral-500 underline decoration-solid mr-5">
+                {wallpaper ? wallpaper.name : null}
+              </p>
+              <label
+                htmlFor="inputFile"
+                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700"
+              >
+                Choose Wallpaper
+              </label>
+              <input
+                id="inputFile"
+                type="file"
+                accept="image/png, image/jpeg, image/jpg"
+                className="hidden"
+                onChange={handleWallpaperChange}
+              />
+            </div>
+            <img></img>
+          </div>
         )
       default:
         return (
@@ -91,7 +117,7 @@ function SettingInput({ setting }) {
             type="text"
             placeholder="Write this minimi's name"
             className="w-full border-b-2 outline-none font-bold focus:border-black"
-            onChange={handleChangeInput}
+            onChange={handleInputChange}
           />
         )
     }

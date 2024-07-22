@@ -7,6 +7,8 @@ import { isWhitespace } from '../../utils/validation'
 import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
+import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
+
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
 import Map from './Map'
@@ -28,8 +30,8 @@ function CreateMinimi() {
     initSettingInputLists,
     initSettingCardLists,
     minimiBrightness,
-    setMinimiBrightness,
     minimiVolume,
+    wallpaper,
     resetMinimiData
   } = useMinimiStore()
 
@@ -50,13 +52,26 @@ function CreateMinimi() {
       return
     }
 
+    let wallpaperUrl = null
+
+    if (wallpaper) {
+      try {
+        wallpaperUrl = await uploadWallpaperToFirebase(wallpaper)
+      } catch (error) {
+        setToastMessage(`이미지 업로드 중 오류가 발생했습니다: ${error}`)
+        setVisible(true)
+        return
+      }
+    }
+
     const minimiData = {
       user: user.displayName,
       title: minimiName,
       location: markerPosition,
       address: placeName,
       volume: minimiVolume,
-      brightness: minimiBrightness
+      brightness: minimiBrightness,
+      wallpaper: wallpaperUrl
     }
 
     try {
