@@ -8,6 +8,7 @@ import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
+import { SETTING_CARD_LISTS } from '../../constants/constants'
 
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
@@ -30,8 +31,10 @@ function CreateMinimi() {
     minimiName,
     settingInputLists,
     settingCardLists,
+    addSettingInputLists,
     initSettingInputLists,
     initSettingCardLists,
+    removeFromSettingCardLists,
     minimiBrightness,
     minimiVolume,
     wallpaper,
@@ -40,6 +43,8 @@ function CreateMinimi() {
 
   const handlePrevBtnClick = () => {
     navigate(-1)
+    initSettingInputLists()
+    initSettingCardLists()
   }
 
   const handleTooltip = () => {
@@ -100,11 +105,8 @@ function CreateMinimi() {
   useEffect(() => {
     setErrorText('minimiName', '')
 
-    if (!id) {
-      initSettingInputLists()
-      initSettingCardLists()
-    } else {
-      const fecthMinimiData = async () => {
+    const fetchMinimiData = async () => {
+      if (id) {
         try {
           const minimiDocRef = doc(MINIMIES_COLLECTION, id)
           const minimiDoc = await getDoc(minimiDocRef)
@@ -119,14 +121,49 @@ function CreateMinimi() {
           setToastMessage(`Minimi 데이터를 가져오는 중 오류가 발생했습니다: ${error}`)
           setVisible(true)
         }
+      } else {
+        initSettingInputLists()
+        initSettingCardLists()
       }
-      fecthMinimiData()
     }
+
+    fetchMinimiData()
 
     return () => {
       resetMinimiData()
     }
-  }, [id])
+  }, [
+    id,
+    initSettingInputLists,
+    initSettingCardLists,
+    resetMinimiData,
+    setErrorText,
+    setToastMessage,
+    setVisible
+  ])
+
+  useEffect(() => {
+    if (existingMinimiData) {
+      const nonNullKeys = Object.keys(existingMinimiData)
+        .filter((key) => {
+          const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1)
+          return existingMinimiData[key] !== null && SETTING_CARD_LISTS.includes(capitalizedKey)
+        })
+        .map((key) => key.charAt(0).toUpperCase() + key.slice(1))
+
+      nonNullKeys.forEach((key) => {
+        addSettingInputLists(key)
+      })
+    }
+  }, [existingMinimiData, addSettingInputLists])
+
+  useEffect(() => {
+    settingCardLists.forEach((card) => {
+      if (settingInputLists.includes(card)) {
+        removeFromSettingCardLists(card)
+      }
+    })
+  }, [settingCardLists, settingInputLists, removeFromSettingCardLists])
 
   useEffect(() => {
     let timer
