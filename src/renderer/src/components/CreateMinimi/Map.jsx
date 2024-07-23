@@ -31,7 +31,7 @@ function Map() {
   }
 
   const fetchPlaceName = (position) => {
-    if (window.google && window.google.maps) {
+    if (isLoaded && window.google && window.google.maps) {
       const geocoder = new window.google.maps.Geocoder()
       geocoder.geocode({ location: position }, (results, status) => {
         if (status === 'OK' && results[0]) {
@@ -46,9 +46,11 @@ function Map() {
   }
 
   useEffect(() => {
-    setMarkerPosition(nowLocation)
-    fetchPlaceName(nowLocation)
-  }, [])
+    if (isLoaded) {
+      setMarkerPosition(nowLocation)
+      fetchPlaceName(nowLocation)
+    }
+  }, [isLoaded])
 
   const handleMapClick = (e) => {
     const { latLng } = e
