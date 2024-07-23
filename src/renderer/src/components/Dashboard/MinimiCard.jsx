@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
 
-function MinimiCard({ id, address, title, brightness, volume }) {
+function MinimiCard({ id, address, title, brightness, volume, wallpaper }) {
   const navigate = useNavigate()
 
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
@@ -23,6 +23,10 @@ function MinimiCard({ id, address, title, brightness, volume }) {
     await window.api.setVolume(level)
   }
 
+  const setWallpaper = async (imageUrl) => {
+    await window.api.setWallpaper(imageUrl)
+  }
+
   useEffect(() => {
     const updateComputerSetting = async () => {
       if (brightness !== null) {
@@ -30,6 +34,9 @@ function MinimiCard({ id, address, title, brightness, volume }) {
       }
       if (volume !== null) {
         await changeVolume(volume)
+      }
+      if (wallpaper !== null) {
+        await setWallpaper(wallpaper)
       }
     }
 
@@ -71,7 +78,8 @@ MinimiCard.propTypes = {
   address: PropTypes.string,
   title: PropTypes.string,
   brightness: PropTypes.string,
-  volume: PropTypes.string
+  volume: PropTypes.string,
+  wallpaper: PropTypes.string
 }
 
 export default MinimiCard

@@ -5,6 +5,9 @@ import icon from '../../resources/icon.png?asset'
 
 import brightness from 'brightness'
 import loudness from 'loudness'
+import axios from 'axios'
+import fs from 'fs'
+import path from 'path'
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -43,6 +46,37 @@ function createWindow() {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+}
+
+const downloadImage = async (imageUrl) => {
+  const userDataPath = app.getPath('userData')
+  const downloadsPath = path.join(userDataPath, 'downloads')
+
+  if (!fs.existsSync(downloadsPath)) {
+    fs.mkdirSync(downloadsPath, { recursive: true })
+  }
+
+  const imagePath = path.join(downloadsPath, 'downloaded_wallpaper.jpg')
+
+  const writer = fs.createWriteStream(imagePath)
+
+  try {
+    const response = await axios({
+      url: imageUrl,
+      method: 'GET',
+      responseType: 'stream'
+    })
+
+    response.data.pipe(writer)
+
+    return new Promise((resolve, reject) => {
+      writer.on('finish', () => resolve(imagePath))
+      writer.on('error', reject)
+    })
+  } catch (error) {
+    console.error('Error downloading image:', error)
+    throw error
   }
 }
 
@@ -99,6 +133,20 @@ app.whenReady().then(() => {
       return true
     } catch (error) {
       console.error('Error setting volume:', error)
+      return false
+    }
+  })
+
+  ipcMain.handle('set-wallpaper', async (event, imageUrl) => {
+    try {
+      const imagePath = await downloadImage(imageUrl)
+      const { setWallpaper } = await import('wallpaper')
+
+      await setWallpaper(imagePath)
+
+      return true
+    } catch (error) {
+      console.error('Error setting wallpaper:', error)
       return false
     }
   })
