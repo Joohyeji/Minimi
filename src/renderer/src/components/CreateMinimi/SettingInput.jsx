@@ -8,6 +8,7 @@ import x_icon from '../../assets/img/x_icon.png'
 
 function SettingInput({ setting }) {
   const {
+    minimiName,
     setMinimiName,
     removeFromInputLists,
     addSettingCardLists,
@@ -91,12 +92,12 @@ function SettingInput({ setting }) {
         return (
           <div className="w-full flex flex-col">
             <div className="flex w-full justify-end relative">
-              <p className="text-sm font-medium leading-7 text-neutral-500 underline decoration-solid mr-5">
-                {wallpaper ? wallpaper.name : null}
+              <p className="text-sm font-medium leading-7 text-neutral-500 underline decoration-solid mr-5 max-w-[300px] w-3/5 truncate">
+                {wallpaper ? wallpaper.name || wallpaper : null}
               </p>
               <label
                 htmlFor="inputFile"
-                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700"
+                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate"
               >
                 Choose Wallpaper
               </label>
@@ -108,7 +109,6 @@ function SettingInput({ setting }) {
                 onChange={handleWallpaperChange}
               />
             </div>
-            <img></img>
           </div>
         )
       default:
@@ -116,6 +116,7 @@ function SettingInput({ setting }) {
           <input
             type="text"
             placeholder="Write this minimi's name"
+            value={minimiName ? minimiName : null}
             className="w-full border-b-2 outline-none font-bold focus:border-black"
             onChange={handleInputChange}
           />

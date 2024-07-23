@@ -18,10 +18,13 @@ const useMinimiStore = create((set) => ({
 
   initSettingInputLists: () => set({ settingInputLists: [] }),
   initSettingCardLists: () => set({ settingCardLists: SETTING_CARD_LISTS }),
-  addSettingInputLists: (list) =>
-    set((state) => ({
-      settingInputLists: [...state.settingInputLists, list]
-    })),
+  addSettingInputLists: (setting) =>
+    set((state) => {
+      if (!state.settingInputLists.includes(setting)) {
+        return { settingInputLists: [...state.settingInputLists, setting] }
+      }
+      return state
+    }),
   removeFromInputLists: (list) =>
     set((state) => ({
       settingInputLists: state.settingInputLists.filter((item) => item !== list)

@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { MINIMIES_COLLECTION } from '../../firebase'
 import { isWhitespace } from '../../utils/validation'
 import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
+import useReadMinimi from '../../hooks/useReadMinimi'
 
 import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
@@ -42,10 +43,13 @@ function CreateMinimi() {
     resetMinimiData
   } = useMinimiStore()
 
+  useReadMinimi()
+
   const handlePrevBtnClick = () => {
     navigate(-1)
     initSettingInputLists()
     initSettingCardLists()
+    setExistingMinimiData(null)
   }
 
   const handleTooltip = () => {
@@ -144,7 +148,7 @@ function CreateMinimi() {
   ])
 
   useEffect(() => {
-    if (existingMinimiData) {
+    if (id && existingMinimiData) {
       const nonNullKeys = Object.keys(existingMinimiData)
         .filter((key) => {
           const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1)
@@ -153,10 +157,12 @@ function CreateMinimi() {
         .map((key) => key.charAt(0).toUpperCase() + key.slice(1))
 
       nonNullKeys.forEach((key) => {
-        addSettingInputLists(key)
+        if (!settingInputLists.includes(key)) {
+          addSettingInputLists(key)
+        }
       })
     }
-  }, [existingMinimiData, addSettingInputLists])
+  }, [existingMinimiData])
 
   useEffect(() => {
     settingCardLists.forEach((card) => {
@@ -164,7 +170,7 @@ function CreateMinimi() {
         removeFromSettingCardLists(card)
       }
     })
-  }, [settingCardLists, settingInputLists, removeFromSettingCardLists])
+  }, [settingCardLists, settingInputLists])
 
   useEffect(() => {
     let timer
