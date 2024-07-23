@@ -3,17 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { MINIMIES_COLLECTION } from '../../firebase'
 import { isWhitespace } from '../../utils/validation'
+import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
 
 import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
-import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
-import { SETTING_CARD_LISTS } from '../../constants/constants'
+import useReadMinimiStore from '../../store/useReadMinimiStore'
 
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
 import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
+import { SETTING_CARD_LISTS } from '../../constants/constants'
 
 function CreateMinimi() {
   const navigate = useNavigate()
@@ -21,10 +22,10 @@ function CreateMinimi() {
 
   const [isHovered, setIsHovered] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
-  const [existingMinimiData, setExistingMinimiData] = useState(null)
 
   const { user } = useAuthStore()
   const { setErrorText, setVisible, setToastMessage } = useErrorStore()
+  const { existingMinimiData, setExistingMinimiData } = useReadMinimiStore()
   const {
     markerPosition,
     placeName,
@@ -190,7 +191,7 @@ function CreateMinimi() {
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-[680px]">
           <SettingInput />
           {settingInputLists.map((setting, index) => (
-            <SettingInput key={index} setting={setting} />
+            <SettingInput key={index} setting={setting} params={id} />
           ))}
           <div className="flex justify-center w-10/12 gap-8">
             {settingCardLists.map((cardText, index) => (
