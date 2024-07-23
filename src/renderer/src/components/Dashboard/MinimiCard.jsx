@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
 
-function MinimiCard({ id, address, title, brightness, volume, wallpaper }) {
+import checkIcon from '../../assets/img/check_icon.svg'
+
+function MinimiCard({ user, id, address, title, brightness, volume, wallpaper }) {
   const navigate = useNavigate()
 
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
@@ -57,26 +59,37 @@ function MinimiCard({ id, address, title, brightness, volume, wallpaper }) {
   return (
     <article
       onClick={handleCardClick}
-      className="h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden p-5"
+      style={{
+        backgroundImage: wallpaper ? `url(${wallpaper})` : 'none',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center center',
+        backgroundRepeat: 'no-repeat'
+      }}
+      className="group flex flex-col justify-between h-[230px] border border-slate-50 rounded-3xl relative shadow-lg hover:shadow-md cursor-pointer overflow-hidden"
     >
-      {id === closestMinimi?.id && (
-        <div className="w-full absolute left-0 top-0 bg-minimi-green h-[20px]"></div>
-      )}
-      <div className="flex flex-row-reverse mt-2 text-neutral-500 font-medium">
-        <p>nickname</p>
+      <div className="flex flex-row-reverse mt-2 text-neutral-500 font-medium px-5">
+        {id === closestMinimi?.id && (
+          <div className="w-10">
+            <img src={checkIcon} />
+          </div>
+        )}
       </div>
-      <div className="absolute bottom-5">
-        <p className="font-black text-lg">{title}</p>
-        <p className="font-medium text-sm text-neutral-500">{address}</p>
+      <div className="flex flex-col gap-1 bg-white/90 p-5 relative group-hover:bg-white max-h-[170px]">
+        <div className="flex justify-between">
+          <p className="font-black text-lg truncate">{title}</p>
+        </div>
+        <p className="font-semibold text-md">{user}</p>
+        <p className="font-medium text-sm text-neutral-500 line-clamp-2">{address}</p>
       </div>
     </article>
   )
 }
 
 MinimiCard.propTypes = {
+  user: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
   address: PropTypes.string,
-  title: PropTypes.string,
   brightness: PropTypes.string,
   volume: PropTypes.string,
   wallpaper: PropTypes.string
