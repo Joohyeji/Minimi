@@ -7,14 +7,16 @@ import Loading from '../Common/Loading'
 import useAuthStore from '../../store/useAuthStore'
 import usePostsStore from '../../store/usePostsStore'
 import useMinimiStore from '../../store/useMinimiStore'
-import deleteIcon from '../../assets/img/delete_icon.png'
+import useReadMinimiStore from '../../store/useReadMinimiStore'
 
 import { RADIUS } from '../../constants/constants'
+import deleteIcon from '../../assets/img/delete_icon.png'
 
 function Dashbaord() {
   const { user, setUser, nowLocation } = useAuthStore()
   const { minimiPosts } = usePostsStore()
   const { setClosestMinimi } = useMinimiStore()
+  const { setExecuteOptions } = useReadMinimiStore()
   const navigate = useNavigate()
 
   useGeoLocation()
@@ -73,6 +75,15 @@ function Dashbaord() {
 
     return () => unsubscribe()
   }, [setUser])
+
+  useEffect(() => {
+    const fetchExecutables = async () => {
+      const executables = await window.api.getExecutables()
+      setExecuteOptions(executables)
+    }
+
+    fetchExecutables()
+  }, [])
 
   if (!user) {
     return <Loading />

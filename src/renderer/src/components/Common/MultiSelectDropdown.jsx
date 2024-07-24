@@ -2,12 +2,15 @@ import PropTypes from 'prop-types'
 import { useEffect, useState, useRef } from 'react'
 
 import useErrorStore from '../../store/useErrorStore'
+import useReadMinimiStore from '../../store/useReadMinimiStore'
 import { MAX_SELECT_AUTORUN } from '../../constants/constants'
 
-const MultiSelectDropdown = ({ options }) => {
+const MultiSelectDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState([])
   const { setToastMessage, setVisible } = useErrorStore()
+  const { executeOptions } = useReadMinimiStore()
+
   const dropdownRef = useRef(null)
 
   const handleToggle = () => setIsOpen(!isOpen)
@@ -51,11 +54,11 @@ const MultiSelectDropdown = ({ options }) => {
         </span>
       </button>
       {isOpen && (
-        <div className="bg-white border border-gray-300 shadow-lg mt-1 rounded-md w-full max-h- overflow-y-auto">
-          {options.map((option) => (
+        <div className="bg-white border border-gray-300 shadow-lg mt-1 rounded-md w-full max-h-[200px] overflow-y-auto">
+          {executeOptions.map((option) => (
             <label
               key={option.value}
-              className="block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
+              className="flex align-center block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
             >
               <input
                 type="checkbox"
@@ -65,7 +68,6 @@ const MultiSelectDropdown = ({ options }) => {
                 className="cursor-pointer mr-3 bg-gray-300 accent-black"
               />
               {option.label}
-              hover:bg-gray-100 text-sm font-normal
             </label>
           ))}
         </div>

@@ -1,7 +1,8 @@
 import { app, shell, BrowserWindow, ipcMain, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import { getUserExecutables } from './utils/fileUtils'
+import icon from '../../resources/icon.png'
 
 import brightness from 'brightness'
 import loudness from 'loudness'
@@ -148,6 +149,15 @@ app.whenReady().then(() => {
     } catch (error) {
       console.error('Error setting wallpaper:', error)
       return false
+    }
+  })
+
+  ipcMain.handle('get-executables', async () => {
+    try {
+      return await getUserExecutables()
+    } catch (error) {
+      console.error('Error getting user executables:', error)
+      return []
     }
   })
 
