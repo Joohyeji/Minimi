@@ -20,8 +20,7 @@ function SettingInput({ setting }) {
     setMinimiVolume,
     wallpaper,
     setWallpaper,
-    autoRun,
-    setAutoRun
+    setExecutables
   } = useMinimiStore()
   const { errorText } = useErrorStore()
 
@@ -64,7 +63,7 @@ function SettingInput({ setting }) {
     }
 
     if (setting === 'Auto Run') {
-      setAutoRun(null)
+      setExecutables(null)
     }
   }
 

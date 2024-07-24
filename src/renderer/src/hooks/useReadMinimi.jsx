@@ -10,7 +10,8 @@ const useReadMinimi = () => {
     setMinimiName,
     setMinimiBrightness,
     setMinimiVolume,
-    setWallpaper
+    setWallpaper,
+    setExecutables
   } = useMinimiStore()
 
   useEffect(() => {
@@ -21,7 +22,8 @@ const useReadMinimi = () => {
         title: setMinimiName,
         brightness: setMinimiBrightness,
         volume: setMinimiVolume,
-        wallpaper: setWallpaper
+        wallpaper: setWallpaper,
+        executables: setExecutables
       }
 
       Object.entries(existingMinimiData).forEach(([key, value]) => {

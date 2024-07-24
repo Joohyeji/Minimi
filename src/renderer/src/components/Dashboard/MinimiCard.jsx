@@ -6,7 +6,7 @@ import useErrorStore from '../../store/useErrorStore'
 
 import checkIcon from '../../assets/img/check_icon.svg'
 
-function MinimiCard({ user, id, address, title, brightness, volume, wallpaper }) {
+function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, executables }) {
   const navigate = useNavigate()
 
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
@@ -29,6 +29,10 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper })
     await window.api.setWallpaper(imageUrl)
   }
 
+  const runExecutables = async (paths) => {
+    await window.api.runExecutables(paths)
+  }
+
   useEffect(() => {
     const updateComputerSetting = async () => {
       if (brightness !== null) {
@@ -39,6 +43,9 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper })
       }
       if (wallpaper !== null) {
         await setWallpaper(wallpaper)
+      }
+      if (executables !== null) {
+        await runExecutables(executables)
       }
     }
 
@@ -92,7 +99,8 @@ MinimiCard.propTypes = {
   address: PropTypes.string,
   brightness: PropTypes.string,
   volume: PropTypes.string,
-  wallpaper: PropTypes.string
+  wallpaper: PropTypes.string,
+  executables: PropTypes.array
 }
 
 export default MinimiCard

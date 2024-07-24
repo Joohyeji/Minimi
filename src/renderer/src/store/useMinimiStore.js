@@ -12,7 +12,7 @@ const useMinimiStore = create((set) => ({
   minimiVolume: null,
   minimiBrightness: null,
   wallpaper: null,
-  autoRun: null,
+  executables: null,
 
   prevClosestMinimi: null,
   closestMinimi: null,
@@ -43,7 +43,10 @@ const useMinimiStore = create((set) => ({
   setMinimiVolume: (volume) => set({ minimiVolume: volume }),
   setMinimiBrightness: (brightness) => set({ minimiBrightness: brightness }),
   setWallpaper: (file) => set({ wallpaper: file }),
-  setAutoRun: (run) => set({ autoRun: run }),
+  setExecutables: (path) => {
+    const normalizedPath = Array.isArray(path) && path.length === 0 ? null : path
+    set({ executables: normalizedPath })
+  },
 
   resetMinimiData: () =>
     set({
@@ -53,7 +56,7 @@ const useMinimiStore = create((set) => ({
       minimiVolume: null,
       minimiBrightness: null,
       wallpaper: null,
-      autoRun: null
+      executables: null
     }),
   setPrevClosestMinimi: (minimi) => set({ prevClosestMinimi: minimi }),
   setClosestMinimi: (minimi) => set({ closestMinimi: minimi })

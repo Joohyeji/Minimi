@@ -2,13 +2,18 @@ import PropTypes from 'prop-types'
 import { useEffect, useState, useRef } from 'react'
 
 import useErrorStore from '../../store/useErrorStore'
+import useMinimiStore from '../../store/useMinimiStore'
 import useReadMinimiStore from '../../store/useReadMinimiStore'
+
+import Loading from '../Common/Loading'
 import { MAX_SELECT_AUTORUN } from '../../constants/constants'
 
 const MultiSelectDropdown = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState([])
-  const { setToastMessage, setVisible } = useErrorStore()
+
+  const { setToastMessage, setVisible, isLoading, setLoading } = useErrorStore()
+  const { executables, setExecutables } = useMinimiStore()
   const { executeOptions } = useReadMinimiStore()
 
   const dropdownRef = useRef(null)
@@ -17,16 +22,19 @@ const MultiSelectDropdown = () => {
 
   const handleCheckboxChange = (e) => {
     const value = e.target.value
-    if (selectedOptions.includes(value)) {
-      setSelectedOptions((prev) => prev.filter((v) => v !== value))
-    } else {
-      if (selectedOptions.length < MAX_SELECT_AUTORUN) {
-        setSelectedOptions((prev) => [...prev, value])
+    setSelectedOptions((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((v) => v !== value)
       } else {
-        setToastMessage(`${MAX_SELECT_AUTORUN}개 까지만 선택할 수 있습니다.`)
-        setVisible(true)
+        if (prev.length < MAX_SELECT_AUTORUN) {
+          return [...prev, value]
+        } else {
+          setToastMessage(`${MAX_SELECT_AUTORUN}개 까지만 선택할 수 있습니다.`)
+          setVisible(true)
+          return prev
+        }
       }
-    }
+    })
   }
 
   const handleOutsideClick = (e) => {
@@ -34,6 +42,23 @@ const MultiSelectDropdown = () => {
       setIsOpen(false)
     }
   }
+
+  useEffect(() => {
+    if (executables && executables.length > 0) {
+      setSelectedOptions(executables)
+    }
+  }, [executables])
+
+  useEffect(() => {
+    setExecutables(selectedOptions)
+  }, [selectedOptions, setExecutables])
+
+  useEffect(() => {
+    setLoading(true)
+    if (executeOptions.length > 0) {
+      setLoading(false)
+    }
+  }, [executeOptions])
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
@@ -55,21 +80,25 @@ const MultiSelectDropdown = () => {
       </button>
       {isOpen && (
         <div className="bg-white border border-gray-300 shadow-lg mt-1 rounded-md w-full max-h-[200px] overflow-y-auto">
-          {executeOptions.map((option) => (
-            <label
-              key={option.value}
-              className="flex align-center block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
-            >
-              <input
-                type="checkbox"
-                value={option.value}
-                onChange={handleCheckboxChange}
-                checked={selectedOptions.includes(option.value)}
-                className="cursor-pointer mr-3 bg-gray-300 accent-black"
-              />
-              {option.label}
-            </label>
-          ))}
+          {!isLoading ? (
+            executeOptions.map((option) => (
+              <label
+                key={option.value}
+                className="flex align-center block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
+              >
+                <input
+                  type="checkbox"
+                  value={option.value}
+                  onChange={handleCheckboxChange}
+                  checked={selectedOptions.includes(option.value)}
+                  className="cursor-pointer mr-3 bg-gray-300 accent-black"
+                />
+                {option.label}
+              </label>
+            ))
+          ) : (
+            <Loading />
+          )}
         </div>
       )}
     </div>

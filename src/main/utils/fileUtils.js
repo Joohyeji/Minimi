@@ -38,8 +38,7 @@ const getUserExecutables = async () => {
             if (targetPath) {
               options.push({
                 value: targetPath,
-                label: path.basename(targetPath).replace(/\.exe$/i, ''),
-                path: targetPath
+                label: path.basename(targetPath).replace(/\.exe$/i, '')
               })
             }
           }

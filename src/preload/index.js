@@ -8,7 +8,8 @@ const api = {
   setVolume: (level) => ipcRenderer.invoke('set-volume', level),
   setMuted: (mute) => ipcRenderer.invoke('set-muted', mute),
   setWallpaper: (url) => ipcRenderer.invoke('set-wallpaper', url),
-  getExecutables: () => ipcRenderer.invoke('get-executables')
+  getExecutables: () => ipcRenderer.invoke('get-executables'),
+  runExecutables: (paths) => ipcRenderer.invoke('run-executables', paths)
 }
 
 if (process.contextIsolated) {

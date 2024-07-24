@@ -40,7 +40,7 @@ function CreateMinimi() {
     minimiBrightness,
     minimiVolume,
     wallpaper,
-    autoRun,
+    executables,
     resetMinimiData
   } = useMinimiStore()
 
@@ -87,7 +87,7 @@ function CreateMinimi() {
       volume: minimiVolume,
       brightness: minimiBrightness,
       wallpaper: wallpaperUrl,
-      autoRun: autoRun
+      executables: executables
     }
 
     try {
@@ -153,10 +153,14 @@ function CreateMinimi() {
     if (id && existingMinimiData) {
       const nonNullKeys = Object.keys(existingMinimiData)
         .filter((key) => {
-          const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1)
-          return existingMinimiData[key] !== null && SETTING_CARD_LISTS.includes(capitalizedKey)
+          const displayKey =
+            key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+
+          return existingMinimiData[key] !== null && SETTING_CARD_LISTS.includes(displayKey)
         })
-        .map((key) => key.charAt(0).toUpperCase() + key.slice(1))
+        .map((key) => {
+          return key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+        })
 
       nonNullKeys.forEach((key) => {
         if (!settingInputLists.includes(key)) {
@@ -168,8 +172,10 @@ function CreateMinimi() {
 
   useEffect(() => {
     settingCardLists.forEach((card) => {
-      if (settingInputLists.includes(card)) {
-        removeFromSettingCardLists(card)
+      const displayCard = card === 'executables' ? 'Auto Run' : card
+
+      if (settingInputLists.includes(displayCard)) {
+        removeFromSettingCardLists(displayCard)
       }
     })
   }, [settingCardLists, settingInputLists])

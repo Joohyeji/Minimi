@@ -9,6 +9,7 @@ import loudness from 'loudness'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
+import { execFile } from 'child_process'
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -158,6 +159,26 @@ app.whenReady().then(() => {
     } catch (error) {
       console.error('Error getting user executables:', error)
       return []
+    }
+  })
+
+  ipcMain.handle('run-executables', (event, executablePaths) => {
+    if (Array.isArray(executablePaths)) {
+      executablePaths.forEach((executablePath) => {
+        if (fs.existsSync(executablePath)) {
+          execFile(executablePath, (err, data) => {
+            if (err) {
+              console.error(`Error executing file ${executablePath}:`, err)
+            } else {
+              console.log(`Executable output from ${executablePath}:`, data)
+            }
+          })
+        } else {
+          console.error(`Executable path does not exist: ${executablePath}`)
+        }
+      })
+    } else {
+      console.error('Invalid argument: executablePaths should be an array')
     }
   })
 
