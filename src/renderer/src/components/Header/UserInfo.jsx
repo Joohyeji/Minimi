@@ -4,8 +4,6 @@ import { auth } from '../../firebase'
 import useErrorStore from '../../store/useErrorStore'
 import useAuthStore from '../../store/useAuthStore'
 
-import logoutIcon from '../../assets/img/logout_icon.png'
-
 function UserInfo({ userName }) {
   const navigate = useNavigate()
 
@@ -31,7 +29,16 @@ function UserInfo({ userName }) {
         Hello, <b className="tracking-wider">{userName}</b>
       </span>
       <button onClick={handleLogOutClick}>
-        <img className="cursor-pointer" src={logoutIcon} />
+        <svg
+          width="30"
+          height="30"
+          viewBox="0 0 35 35"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="fill-neutral-500 hover:fill-black"
+        >
+          <path d="M3.88889 35C2.81944 35 1.90426 34.6195 1.14333 33.8586C0.382407 33.0977 0.0012963 32.1819 0 31.1111V3.88889C0 2.81944 0.381111 1.90426 1.14333 1.14333C1.90556 0.382407 2.82074 0.0012963 3.88889 0H17.5V3.88889H3.88889V31.1111H17.5V35H3.88889ZM25.2778 27.2222L22.6042 24.4028L27.5625 19.4444H11.6667V15.5556H27.5625L22.6042 10.5972L25.2778 7.77778L35 17.5L25.2778 27.2222Z" />
+        </svg>
       </button>
     </div>
   )
