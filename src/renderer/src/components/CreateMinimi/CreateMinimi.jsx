@@ -212,7 +212,7 @@ function CreateMinimi() {
           DONE .
         </button>
       </div>
-      <div className="relative ml-5 w-2/5 h-[680px] bg-gray-100 -mt-[60px] -mr-7">
+      <div className="relative ml-5 w-2/5 h-[680px] bg-gray-100 -mt-[40px] -mr-7">
         <button
           onMouseEnter={handleTooltip}
           onMouseLeave={() => setIsHovered(false)}
