@@ -40,6 +40,7 @@ function CreateMinimi() {
     minimiBrightness,
     minimiVolume,
     wallpaper,
+    autoRun,
     resetMinimiData
   } = useMinimiStore()
 
@@ -85,7 +86,8 @@ function CreateMinimi() {
       address: placeName,
       volume: minimiVolume,
       brightness: minimiBrightness,
-      wallpaper: wallpaperUrl
+      wallpaper: wallpaperUrl,
+      autoRun: autoRun
     }
 
     try {
@@ -194,7 +196,7 @@ function CreateMinimi() {
           </button>
           <h1 className="ml-6 text-4xl font-bold">Make new Minimi</h1>
         </div>
-        <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-[680px]">
+        <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-3/4">
           <SettingInput />
           {settingInputLists.map((setting, index) => (
             <SettingInput key={index} setting={setting} params={id} />

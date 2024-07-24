@@ -12,6 +12,7 @@ const useMinimiStore = create((set) => ({
   minimiVolume: null,
   minimiBrightness: null,
   wallpaper: null,
+  autoRun: null,
 
   prevClosestMinimi: null,
   closestMinimi: null,
@@ -42,6 +43,8 @@ const useMinimiStore = create((set) => ({
   setMinimiVolume: (volume) => set({ minimiVolume: volume }),
   setMinimiBrightness: (brightness) => set({ minimiBrightness: brightness }),
   setWallpaper: (file) => set({ wallpaper: file }),
+  setAutoRun: (run) => set({ autoRun: run }),
+
   resetMinimiData: () =>
     set({
       markerPosition: null,
@@ -49,7 +52,8 @@ const useMinimiStore = create((set) => ({
       placeName: '',
       minimiVolume: null,
       minimiBrightness: null,
-      wallpaper: null
+      wallpaper: null,
+      autoRun: null
     }),
   setPrevClosestMinimi: (minimi) => set({ prevClosestMinimi: minimi }),
   setClosestMinimi: (minimi) => set({ closestMinimi: minimi })

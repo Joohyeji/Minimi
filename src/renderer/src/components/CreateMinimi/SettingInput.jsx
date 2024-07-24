@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types'
+import { useState, useEffect } from 'react'
 
-import ErrorText from '../Common/ErrorText'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 
+import ErrorText from '../Common/ErrorText'
+import MultiSelectDropdown from '../Common/MultiSelectDropdown'
 import x_icon from '../../assets/img/x_icon.png'
 
 function SettingInput({ setting }) {
@@ -17,28 +19,32 @@ function SettingInput({ setting }) {
     minimiVolume,
     setMinimiVolume,
     wallpaper,
-    setWallpaper
+    setWallpaper,
+    autoRun,
+    setAutoRun
   } = useMinimiStore()
   const { errorText } = useErrorStore()
 
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
   const handleInputChange = (e) => {
-    const minimiName = e.target.value
-    setMinimiName(minimiName)
+    setMinimiName(e.target.value)
   }
 
   const handleBrightnessChange = (e) => {
-    const minimiBrightness = e.target.value
-    setMinimiBrightness(minimiBrightness)
+    setMinimiBrightness(e.target.value)
   }
 
   const handleVolumeChange = (e) => {
-    const minimiVolume = e.target.value
-    setMinimiVolume(minimiVolume)
+    setMinimiVolume(e.target.value)
   }
 
   const handleWallpaperChange = (e) => {
-    const file = e.target.files[0]
-    setWallpaper(file)
+    setWallpaper(e.target.files[0])
   }
 
   const handleXBtnClick = () => {
@@ -56,7 +62,18 @@ function SettingInput({ setting }) {
     if (setting === 'Wallpaper') {
       setWallpaper(null)
     }
+
+    if (setting === 'Auto Run') {
+      setAutoRun(null)
+    }
   }
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' }
+  ]
 
   const renderInput = () => {
     switch (setting) {
@@ -71,7 +88,7 @@ function SettingInput({ setting }) {
               onChange={handleBrightnessChange}
               value={minimiBrightness || 50}
             />
-            <p className="text-sm font-light ml-2 mt-1">{minimiBrightness}</p>
+            <p className="text-sm font-light mr-2 mt-1">{minimiBrightness}</p>
           </>
         )
       case 'Volume':
@@ -85,19 +102,19 @@ function SettingInput({ setting }) {
               onChange={handleVolumeChange}
               value={minimiVolume || 50}
             />
-            <p className="text-sm font-light ml-2 mt-1">{minimiVolume}</p>
+            <p className="text-sm font-light mr-2 mt-1">{minimiVolume}</p>
           </>
         )
       case 'Wallpaper':
         return (
           <div className="w-full flex flex-col">
-            <div className="flex w-full justify-end relative">
-              <p className="text-sm font-medium leading-7 text-neutral-500 underline decoration-solid mr-5 max-w-[300px] w-3/5 truncate">
+            <div className="flex w-full justify-between relative">
+              <p className="text-sm font-medium leading-7 text-neutral-500 underline decoration-solid max-w-[300px] truncate">
                 {wallpaper ? wallpaper.name || wallpaper : null}
               </p>
               <label
                 htmlFor="inputFile"
-                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate"
+                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate w-[145px]"
               >
                 Choose Wallpaper
               </label>
@@ -111,12 +128,14 @@ function SettingInput({ setting }) {
             </div>
           </div>
         )
+      case 'Auto Run':
+        return <MultiSelectDropdown options={options} />
       default:
         return (
           <input
             type="text"
             placeholder="Write this minimi's name"
-            value={minimiName ? minimiName : null}
+            value={minimiName || ''}
             className="w-full border-b-2 outline-none font-bold focus:border-black"
             onChange={handleInputChange}
           />
@@ -125,17 +144,19 @@ function SettingInput({ setting }) {
   }
 
   return (
-    <div>
+    <div
+      className={`transition-opacity duration-500 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+    >
       <div className="flex items-center gap-10">
-        <div className="flex flex-col justify-center w-10/12 bg-white drop-shadow-md border border-slate-50 rounded-full p-3 px-10 text-neutral-900 font-bold  text-2xl gap-5">
+        <div className="flex flex-col justify-center w-10/12 bg-white drop-shadow-md border border-slate-50 rounded-lg p-3 px-10 text-neutral-900 font-bold text-2xl gap-5">
           <div className="flex justify-between">
             {setting && <span className="text-lg w-[150px]">{setting}</span>}
-            <div className="flex w-full">{renderInput()}</div>
+            <div className="flex flex-row-reverse w-full">{renderInput()}</div>
           </div>
           {!setting && <ErrorText message={errorText.minimiName} />}
         </div>
-        <button onClick={handleXBtnClick} className="h-10 hover:rotate-90">
-          {setting ? <img src={x_icon} alt="x-button" className="h-full" /> : null}
+        <button onClick={handleXBtnClick} className="right-20 top-2 h-full hover:rotate-90">
+          {setting ? <img src={x_icon} alt="x-button" className="w-[30px]" /> : null}
         </button>
       </div>
     </div>
