@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
+import useDeleteMinimiStore from '../../store/useDeleteMinimiStore'
 
 import checkIcon from '../../assets/img/check_icon.svg'
 
@@ -11,6 +12,7 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, e
 
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
   const { setVisible, setToastMessage } = useErrorStore()
+  const { isToggle } = useDeleteMinimiStore()
 
   const changeBrightness = async (level) => {
     await window.api.setBrightness(level)
@@ -60,6 +62,9 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, e
   }, [closestMinimi])
 
   const handleCardClick = () => {
+    if (isToggle) {
+      return
+    }
     navigate(`/createminimi/${id}`)
   }
 

@@ -4,13 +4,13 @@ import { auth } from '../../firebase'
 import useGeoLocation from '../../hooks/useGeolocation'
 
 import Loading from '../Common/Loading'
+import DeleteButton from '../Common/DeleteButton'
 import useAuthStore from '../../store/useAuthStore'
 import usePostsStore from '../../store/usePostsStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import useReadMinimiStore from '../../store/useReadMinimiStore'
 
 import { RADIUS } from '../../constants/constants'
-import deleteIcon from '../../assets/img/delete_icon.png'
 
 function Dashbaord() {
   const { user, setUser, nowLocation } = useAuthStore()
@@ -116,9 +116,7 @@ function Dashbaord() {
       </nav>
       <section className="mt-5">
         <Outlet />
-        <button className="border border-slate-50 rounded-full shadow-md hover:drop-shadow-md p-2 w-12 fixed bottom-7 right-7 hover:bg-white">
-          <img src={deleteIcon} />
-        </button>
+        <DeleteButton />
       </section>
     </>
   )
