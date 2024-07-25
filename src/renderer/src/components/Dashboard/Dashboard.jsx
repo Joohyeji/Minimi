@@ -4,11 +4,11 @@ import { auth } from '../../firebase'
 import useGeoLocation from '../../hooks/useGeolocation'
 
 import Loading from '../Common/Loading'
-import DeleteButton from '../Common/DeleteButton'
 import useAuthStore from '../../store/useAuthStore'
 import usePostsStore from '../../store/usePostsStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import useReadMinimiStore from '../../store/useReadMinimiStore'
+import useDeleteMinimiStore from '../../store/useDeleteMinimiStore'
 
 import { RADIUS } from '../../constants/constants'
 
@@ -17,6 +17,7 @@ function Dashbaord() {
   const { minimiPosts } = usePostsStore()
   const { setClosestMinimi } = useMinimiStore()
   const { setExecuteOptions } = useReadMinimiStore()
+  const { initToggle } = useDeleteMinimiStore()
   const navigate = useNavigate()
 
   useGeoLocation()
@@ -82,6 +83,7 @@ function Dashbaord() {
       setExecuteOptions(executables)
     }
 
+    initToggle(false)
     fetchExecutables()
   }, [])
 
@@ -116,7 +118,6 @@ function Dashbaord() {
       </nav>
       <section className="mt-5">
         <Outlet />
-        <DeleteButton />
       </section>
     </>
   )

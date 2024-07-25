@@ -8,6 +8,7 @@ import useErrorStore from '../../store/useErrorStore'
 import MinimiCard from './MinimiCard'
 import CreateMinimiCard from './CreateMinimiCard'
 import Loading from '../Common/Loading'
+import DeleteButton from '../Common/DeleteButton'
 
 function MyMinimies() {
   const [visibleItems, setVisibleItems] = useState([])
@@ -49,7 +50,7 @@ function MyMinimies() {
   }, [user])
 
   return (
-    <div className="mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto py-5 h-[564px]">
+    <div className="mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto p-3 h-[564px]">
       {isLoading ? (
         <Loading />
       ) : (
@@ -78,6 +79,7 @@ function MyMinimies() {
           </div>
         </>
       )}
+      <DeleteButton uid={user.uid} onFetch={fetchUserMinimies} />
     </div>
   )
 }

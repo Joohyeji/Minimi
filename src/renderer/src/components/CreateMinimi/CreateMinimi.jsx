@@ -87,7 +87,8 @@ function CreateMinimi() {
       volume: minimiVolume,
       brightness: minimiBrightness,
       wallpaper: wallpaperUrl,
-      executables: executables
+      executables: executables,
+      date: new Date().toISOString()
     }
 
     try {
