@@ -81,21 +81,26 @@ const MultiSelectDropdown = () => {
       {isOpen && (
         <div className="bg-white border border-gray-300 shadow-lg mt-1 rounded-md w-full max-h-[200px] overflow-y-auto">
           {!isLoading ? (
-            executeOptions.map((option) => (
-              <label
-                key={option.value}
-                className="flex align-center block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
-              >
-                <input
-                  type="checkbox"
-                  value={option.value}
-                  onChange={handleCheckboxChange}
-                  checked={selectedOptions.includes(option.value)}
-                  className="cursor-pointer mr-3 bg-gray-300 accent-black"
-                />
-                {option.label}
-              </label>
-            ))
+            <>
+              <button className="w-full block px-4 py-1 bg-gray-100 font-medium hover:bg-black hover:text-white text-sm font-normal sticky top-0">
+                + Add File
+              </button>
+              {executeOptions.map((option) => (
+                <label
+                  key={option.value}
+                  className="flex align-center block px-4 py-2 hover:bg-gray-100 text-sm font-normal"
+                >
+                  <input
+                    type="checkbox"
+                    value={option.value}
+                    onChange={handleCheckboxChange}
+                    checked={selectedOptions.includes(option.value)}
+                    className="cursor-pointer mr-3 bg-gray-300 accent-black"
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </>
           ) : (
             <Loading />
           )}
