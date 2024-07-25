@@ -130,8 +130,8 @@ MinimiCard.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   address: PropTypes.string,
-  brightness: PropTypes.string,
-  volume: PropTypes.string,
+  brightness: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  volume: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wallpaper: PropTypes.string,
   executables: PropTypes.array
 }

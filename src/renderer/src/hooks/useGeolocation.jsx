@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
 import useErrorStore from '../store/useErrorStore'
 import useAuthStore from '../store/useAuthStore'
-import { POLL_INTERVAL } from '../constants/constants'
+import useTimerStore from '../store/useTimerStore'
 
 const useGeoLocation = () => {
   const { setNowLocation } = useAuthStore()
   const { setVisible, setToastMessage } = useErrorStore()
+  const { timer } = useTimerStore()
 
   useEffect(() => {
     const fetchLocation = () => {
@@ -26,7 +27,7 @@ const useGeoLocation = () => {
 
     fetchLocation()
 
-    const intervalId = setInterval(fetchLocation, POLL_INTERVAL)
+    const intervalId = setInterval(fetchLocation, timer)
 
     return () => {
       clearInterval(intervalId)
