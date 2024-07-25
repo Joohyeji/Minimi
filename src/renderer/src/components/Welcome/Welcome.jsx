@@ -29,15 +29,22 @@ function Welcome() {
       switch (err.code) {
         case 'auth/user-not-found':
           setToastMessage('이메일을 확인해주세요.')
+          setVisible(true)
           break
         case 'auth/wrong-password':
           setToastMessage('비밀번호를 확인해주세요.')
+          setVisible(true)
           break
         case 'auth/invalid-email':
           setToastMessage('이메일이 올바르지 않습니다.')
+          setVisible(true)
+          break
+        case 'auth/network-request-failed':
+          setToastMessage('네트워크를 연결해주세요.')
+          setVisible(true)
           break
         default:
-          setToastMessage('존재하지않는 사용자입니다. 회원가입을 먼저 해주세요.')
+          setToastMessage('로그인 중 오류가 발생했습니다.')
           setVisible(true)
           break
       }
