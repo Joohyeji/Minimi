@@ -19,7 +19,7 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, e
   }
 
   const changeVolume = async (level) => {
-    if (level === 0) {
+    if (level == 0) {
       await window.api.setMuted(true)
     } else {
       await window.api.setMuted(false)
