@@ -4,6 +4,7 @@ export const PIN_SIZE = 50
 export const RADIUS = 100
 export const MAX_SELECT_AUTORUN = 5
 
+export const POLL_INTERVAL = 1000
 // export const POLL_INTERVAL = 10000
-export const POLL_INTERVAL = 300000
+// export const POLL_INTERVAL = 300000
 // export const POLL_INTERVAL = 1800000

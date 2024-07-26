@@ -1,35 +1,81 @@
 import PropTypes from 'prop-types'
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 
 import useErrorStore from '../../store/useErrorStore'
 import useAuthStore from '../../store/useAuthStore'
+import useTimerStore from '../../store/useTimerStore'
 
 import Map from '../CreateMinimi/Map'
-import xIcon from '../../assets/img/x_icon.png'
 
 function UserInfo({ userName }) {
   const navigate = useNavigate()
 
   const selectRef = useRef(null)
-  const [isSettingToggle, setSettingToggle] = useState(false)
+  // const [isSettingToggle, setSettingToggle] = useState(false)
   const [isTimerToggle, setTimerToggle] = useState(false)
+  const [timeRemaining, setTimeRemaining] = useState(0)
 
+  const {
+    setTimer,
+    initTimer,
+    isTimerRunning,
+    setIsTimerRunning,
+    isSettingToggle,
+    setSettingToggle
+  } = useTimerStore()
   const { setToastMessage, setVisible } = useErrorStore()
   const { clearUser } = useAuthStore()
 
   const handleSettingClick = () => {
-    setSettingToggle((state) => !state)
+    setSettingToggle()
   }
 
   const handleTimerClick = () => {
     setTimerToggle((state) => !state)
 
     if (!isTimerToggle) {
+      console.log('타이머시작함', isTimerToggle)
       const selectedValue = parseInt(selectRef.current.value, 10)
-      console.log(selectedValue)
+
+      setTimer(selectedValue)
+      setTimeRemaining(selectedValue)
+      setIsTimerRunning(true)
+    } else {
+      initTimer()
+      setIsTimerRunning(false)
     }
+  }
+
+  useEffect(() => {
+    let timerId
+
+    if (isTimerRunning && timeRemaining > 0) {
+      timerId = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1000) {
+            setIsTimerRunning(false)
+            setTimerToggle(false)
+            initTimer()
+            clearInterval(timerId)
+            return 0
+          }
+          return prev - 1000
+        })
+      }, 1000)
+    }
+
+    return () => clearInterval(timerId)
+  }, [isTimerRunning, timeRemaining])
+
+  const formatTime = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = totalSeconds % 60
+
+    return `${String(hours).padStart(2, '0')} h : ${String(minutes).padStart(2, '0')} m : ${String(seconds).padStart(2, '0')} sec`
   }
 
   const handleLogOutClick = async () => {
@@ -78,15 +124,16 @@ function UserInfo({ userName }) {
       {isSettingToggle && (
         <div className="absolute w-[300px] bg-white h-[250px] border border-slate-50 top-14 right-10 rounded-md shadow-md overflow-hidden">
           <div className="flex justify-between items-center bg-black text-white px-3 py-2">
-            <p>{isTimerToggle ? '00:00:00' : '이 위치로 고정'}</p>
+            <p>{isTimerToggle ? formatTime(timeRemaining) : '이 위치로 고정'}</p>
             <div className="flex gap-2">
               {!isTimerToggle && (
                 <select className="cursor-pointer bg-black" ref={selectRef}>
-                  <option value="600000">10 min</option>
-                  <option value="1800000">30 min</option>
-                  <option value="3600000">1 hour</option>
-                  <option value="7200000">2 hour</option>
-                  <option value="10800000">3 hour</option>
+                  <option value="10000">10 초</option>
+                  <option value="600000">10 분</option>
+                  <option value="1800000">30 분</option>
+                  <option value="3600000">1 시간</option>
+                  <option value="7200000">2 시간</option>
+                  <option value="10800000">3 시간</option>
                 </select>
               )}
               <button
@@ -94,7 +141,18 @@ function UserInfo({ userName }) {
                 className={`rounded-full p-1 text-black hover:bg-minimi-green border border-white hover:border-minimi-green ${isTimerToggle ? 'bg-minimi-green border-minimi-green' : ''}`}
               >
                 {isTimerToggle ? (
-                  <img className="w-[20px]" src={xIcon} />
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 50 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M31.25 6.25004H18.75V2.08337H31.25V6.25004ZM27.0833 39.5834C27.0833 41.7292 27.625 43.75 28.5625 45.4792C27.4167 45.7084 26.2292 45.8334 25 45.8334C20.0272 45.8334 15.2581 43.8579 11.7417 40.3416C8.22544 36.8253 6.25 32.0562 6.25 27.0834C6.25 22.1106 8.22544 17.3414 11.7417 13.8251C15.2581 10.3088 20.0272 8.33337 25 8.33337C29.4167 8.33337 33.4792 9.87504 36.7083 12.5L39.6667 9.50004C40.7292 10.4167 41.6667 11.375 42.6042 12.4375L39.6458 15.3959C42.3043 18.711 43.7521 22.834 43.75 27.0834V27.8125C42.4167 27.3542 41.0417 27.0834 39.5833 27.0834C32.6875 27.0834 27.0833 32.6875 27.0833 39.5834ZM27.0833 14.5834H22.9167V29.1667H27.0833V14.5834ZM46.9583 35.1667L44 32.2292L39.5833 36.6459L35.1667 32.2292L32.2292 35.1667L36.6458 39.5834L32.2292 44L35.1667 46.9584L39.5833 42.5209L44 46.9584L46.9583 44L42.5208 39.5834L46.9583 35.1667Z"
+                      fill="black"
+                    />
+                  </svg>
                 ) : (
                   <svg
                     className="fill-white hover:fill-black"
@@ -111,7 +169,7 @@ function UserInfo({ userName }) {
             </div>
           </div>
           <div className="w-full h-full">
-            <Map settingMode={isSettingToggle} />
+            <Map isSettingMap={true} />
           </div>
         </div>
       )}

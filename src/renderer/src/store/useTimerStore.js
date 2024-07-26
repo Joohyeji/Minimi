@@ -3,11 +3,13 @@ import { POLL_INTERVAL } from '../constants/constants'
 
 const useTimerStore = create((set) => ({
   timer: POLL_INTERVAL,
-  countDown: null,
+  isTimerRunning: false,
+  isSettingToggle: false,
 
   setTimer: (time) => set({ timer: time }),
   initTimer: () => set({ timer: POLL_INTERVAL }),
-  setCountDown: (time) => set({ countDown: time })
+  setIsTimerRunning: (value) => set({ isTimerRunning: value }),
+  setSettingToggle: () => set((state) => ({ isSettingToggle: !state.isSettingToggle }))
 }))
 
 export default useTimerStore

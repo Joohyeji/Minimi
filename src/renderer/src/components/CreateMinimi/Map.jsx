@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { useEffect, useRef } from 'react'
 import { GoogleMap, useJsApiLoader, MarkerF, Circle } from '@react-google-maps/api'
 import useErrorStore from '../../store/useErrorStore'
@@ -8,10 +9,10 @@ import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
 import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE } from '../../constants/constants'
 
-function Map() {
+function Map({ isSettingMap }) {
   const mapRef = useRef(null)
 
-  const { nowLocation } = useAuthStore()
+  const { nowLocation, setNowLocation } = useAuthStore()
   const { setToastMessage, setVisible } = useErrorStore()
   const { markerPosition, setMarkerPosition, setPlaceName } = useMinimiStore()
 
@@ -60,6 +61,11 @@ function Map() {
     }
     setMarkerPosition(newPosition)
     fetchPlaceName(newPosition)
+
+    if (isSettingMap) {
+      setNowLocation(newPosition)
+    }
+
     setToastMessage('이 위치로 변경되었습니다.')
     setVisible(true)
   }
@@ -109,6 +115,10 @@ function Map() {
       )}
     </>
   )
+}
+
+Map.propTypes = {
+  isSettingMap: PropTypes.bool
 }
 
 export default Map
