@@ -36,7 +36,6 @@ function UserInfo({ userName }) {
     setTimerToggle((state) => !state)
 
     if (!isTimerToggle) {
-      console.log('타이머시작함', isTimerToggle)
       const selectedValue = parseInt(selectRef.current.value, 10)
 
       setTimer(selectedValue)
