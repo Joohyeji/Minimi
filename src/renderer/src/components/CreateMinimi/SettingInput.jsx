@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
 
+import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
+import fetchBaseBookmarks from '../../hooks/fetchBaseBookmarks'
 
 import ErrorText from '../Common/ErrorText'
 import MultiSelectDropdown from '../Common/MultiSelectDropdown'
@@ -22,11 +24,14 @@ function SettingInput({ setting }) {
     wallpaper,
     setWallpaper,
     setExecutables,
-    setBookmarks
+    baseBookmarks,
+    setBaseBookmarks
   } = useMinimiStore()
-  const { errorText, setToastMessage, setVisible } = useErrorStore()
+  const { errorText } = useErrorStore()
+  const { user } = useAuthStore()
 
   const [isVisible, setIsVisible] = useState(false)
+  const userId = user.uid
 
   useEffect(() => {
     setIsVisible(true)
@@ -71,22 +76,12 @@ function SettingInput({ setting }) {
 
   const [selectedBrowser, setSelectedBrowser] = useState('')
 
-  const handleBrowserChange = (event) => {
+  const handleBrowserChange = async (event) => {
     const selectedBrowser = event.target.value
     setSelectedBrowser(selectedBrowser)
 
-    const fetchBrowsers = async () => {
-      setBookmarks(null)
-      try {
-        const bookmarks = await window.api.getBookmarks(selectedBrowser)
-        console.log('bookmarks', bookmarks)
-        setBookmarks(bookmarks)
-      } catch (error) {
-        setToastMessage('북마크를 불러올 수 없습니다.')
-        setVisible(true)
-      }
-    }
-    fetchBrowsers()
+    const baseBookmarks = await fetchBaseBookmarks(userId, selectedBrowser)
+    setBaseBookmarks(baseBookmarks)
   }
 
   const renderInput = () => {

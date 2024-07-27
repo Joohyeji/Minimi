@@ -13,6 +13,7 @@ const useMinimiStore = create((set) => ({
   minimiBrightness: null,
   wallpaper: null,
   executables: null,
+  baseBookmarks: null,
   bookmarks: null,
 
   prevClosestMinimi: null,
@@ -48,6 +49,7 @@ const useMinimiStore = create((set) => ({
     const normalizedPath = Array.isArray(path) && path.length === 0 ? null : path
     set({ executables: normalizedPath })
   },
+  setBaseBookmarks: (bookmarks) => set({ baseBookmarks: bookmarks }),
   setBookmarks: (bookmarks) => set({ bookmarks: bookmarks }),
 
   resetMinimiData: () =>
