@@ -41,7 +41,8 @@ function CreateMinimi() {
     minimiVolume,
     wallpaper,
     executables,
-    resetMinimiData
+    resetMinimiData,
+    setPrevClosestMinimi
   } = useMinimiStore()
 
   useReadMinimi()
@@ -95,6 +96,7 @@ function CreateMinimi() {
       if (id) {
         const minimiDocRef = doc(MINIMIES_COLLECTION, id)
         await setDoc(minimiDocRef, minimiData)
+        setPrevClosestMinimi(null)
       } else {
         const newMinimi = doc(MINIMIES_COLLECTION)
         await setDoc(newMinimi, minimiData)

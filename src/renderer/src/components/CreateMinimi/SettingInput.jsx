@@ -6,6 +6,7 @@ import useMinimiStore from '../../store/useMinimiStore'
 
 import ErrorText from '../Common/ErrorText'
 import MultiSelectDropdown from '../Common/MultiSelectDropdown'
+import { BROWSERS_LIST } from '../../constants/constants'
 import x_icon from '../../assets/img/x_icon.png'
 
 function SettingInput({ setting }) {
@@ -20,9 +21,10 @@ function SettingInput({ setting }) {
     setMinimiVolume,
     wallpaper,
     setWallpaper,
-    setExecutables
+    setExecutables,
+    setBookmarks
   } = useMinimiStore()
-  const { errorText } = useErrorStore()
+  const { errorText, setToastMessage, setVisible } = useErrorStore()
 
   const [isVisible, setIsVisible] = useState(false)
 
@@ -65,6 +67,26 @@ function SettingInput({ setting }) {
     if (setting === 'Auto Run') {
       setExecutables(null)
     }
+  }
+
+  const [selectedBrowser, setSelectedBrowser] = useState('')
+
+  const handleBrowserChange = (event) => {
+    const selectedBrowser = event.target.value
+    setSelectedBrowser(selectedBrowser)
+
+    const fetchBrowsers = async () => {
+      setBookmarks(null)
+      try {
+        const bookmarks = await window.api.getBookmarks(selectedBrowser)
+        console.log('bookmarks', bookmarks)
+        setBookmarks(bookmarks)
+      } catch (error) {
+        setToastMessage('북마크를 불러올 수 없습니다.')
+        setVisible(true)
+      }
+    }
+    fetchBrowsers()
   }
 
   const renderInput = () => {
@@ -122,6 +144,31 @@ function SettingInput({ setting }) {
         )
       case 'Auto Run':
         return <MultiSelectDropdown />
+      case 'Bookmarks':
+        return (
+          <div className="flex flex-col w-full gap-3">
+            <div className="w-full flex justify-between items-center text-base font-medium mt-2 gap-5">
+              {BROWSERS_LIST.map((bookmarks, index) => {
+                return (
+                  <label key={index} className="flex items-center cursor-pointer">
+                    <input
+                      className="mt-1 mr-2 accent-black"
+                      type="radio"
+                      value={bookmarks}
+                      checked={selectedBrowser === bookmarks}
+                      onChange={handleBrowserChange}
+                    />
+                    {bookmarks}
+                  </label>
+                )
+              })}
+              <button className="bg-black w-[30px] h-[30px] text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700">
+                +
+              </button>
+            </div>
+            <MultiSelectDropdown type={'bookmarks'} />
+          </div>
+        )
       default:
         return (
           <input
@@ -142,7 +189,7 @@ function SettingInput({ setting }) {
       <div className="flex items-center gap-10">
         <div className="flex flex-col justify-center w-10/12 bg-white drop-shadow-md border border-slate-50 rounded-lg p-3 px-10 text-neutral-900 font-bold text-2xl gap-5">
           <div className="flex justify-between">
-            {setting && <span className="text-lg w-[150px]">{setting}</span>}
+            {setting && <span className="flex items-center text-lg w-[150px]">{setting}</span>}
             <div className="flex flex-row-reverse w-full">{renderInput()}</div>
           </div>
           {!setting && <ErrorText message={errorText.minimiName} />}

@@ -13,6 +13,7 @@ const useMinimiStore = create((set) => ({
   minimiBrightness: null,
   wallpaper: null,
   executables: null,
+  bookmarks: null,
 
   prevClosestMinimi: null,
   closestMinimi: null,
@@ -47,6 +48,7 @@ const useMinimiStore = create((set) => ({
     const normalizedPath = Array.isArray(path) && path.length === 0 ? null : path
     set({ executables: normalizedPath })
   },
+  setBookmarks: (bookmarks) => set({ bookmarks: bookmarks }),
 
   resetMinimiData: () =>
     set({
@@ -56,7 +58,8 @@ const useMinimiStore = create((set) => ({
       minimiVolume: null,
       minimiBrightness: null,
       wallpaper: null,
-      executables: null
+      executables: null,
+      bookmarks: null
     }),
   setPrevClosestMinimi: (minimi) => set({ prevClosestMinimi: minimi }),
   setClosestMinimi: (minimi) => set({ closestMinimi: minimi })

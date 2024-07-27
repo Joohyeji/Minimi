@@ -9,6 +9,9 @@ import loudness from 'loudness'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
+import os from 'os'
+import sqlite3 from 'sqlite3'
+import plist from 'plist'
 import { execFile } from 'child_process'
 
 function createWindow() {
@@ -162,23 +165,138 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('run-executables', (event, executablePaths) => {
-    if (Array.isArray(executablePaths)) {
-      executablePaths.forEach((executablePath) => {
-        if (fs.existsSync(executablePath)) {
-          execFile(executablePath, (err, data) => {
-            if (err) {
-              console.error(`Error executing file ${executablePath}:`, err)
-            } else {
-              console.log(`Executable output from ${executablePath}:`, data)
-            }
-          })
+  ipcMain.handle('get-bookmarks', async (event, browser) => {
+    try {
+      let bookmarks
+      const platform = os.platform()
+
+      if (browser === 'chrome' || browser === 'edge') {
+        let bookmarksPath
+        if (platform === 'win32') {
+          bookmarksPath = path.join(
+            os.homedir(),
+            'AppData',
+            'Local',
+            browser === 'chrome' ? 'Google' : 'Microsoft',
+            browser === 'chrome' ? 'Chrome' : 'Edge',
+            'User Data',
+            'Default',
+            'Bookmarks'
+          )
+        } else if (platform === 'darwin') {
+          bookmarksPath = path.join(
+            os.homedir(),
+            'Library',
+            'Application Support',
+            browser === 'chrome' ? 'Google' : 'Microsoft',
+            browser === 'chrome' ? 'Chrome' : 'Edge',
+            'Default',
+            'Bookmarks'
+          )
+        } else if (platform === 'linux') {
+          bookmarksPath = path.join(
+            os.homedir(),
+            '.config',
+            browser === 'chrome' ? 'google-chrome' : 'microsoft-edge',
+            'Default',
+            'Bookmarks'
+          )
         } else {
-          console.error(`Executable path does not exist: ${executablePath}`)
+          throw new Error('Unsupported platform')
         }
-      })
-    } else {
-      console.error('Invalid argument: executablePaths should be an array')
+
+        const data = fs.readFileSync(bookmarksPath, 'utf-8')
+        bookmarks = JSON.parse(data).roots.bookmark_bar.children
+      } else if (browser === 'firefox') {
+        let profileDir
+        if (platform === 'win32') {
+          profileDir = path.join(
+            os.homedir(),
+            'AppData',
+            'Roaming',
+            'Mozilla',
+            'Firefox',
+            'Profiles'
+          )
+        } else if (platform === 'darwin' || platform === 'linux') {
+          profileDir = path.join(
+            os.homedir(),
+            'Library',
+            'Application Support',
+            'Firefox',
+            'Profiles'
+          )
+        } else {
+          throw new Error('Unsupported platform')
+        }
+
+        const profiles = fs.readdirSync(profileDir)
+        const profilePath = path.join(profileDir, profiles[0])
+        const dbPath = path.join(profilePath, 'places.sqlite')
+
+        const db = new sqlite3.Database(dbPath)
+        const rows = await new Promise((resolve, reject) => {
+          db.all(
+            'SELECT moz_bookmarks.title, moz_places.url FROM moz_bookmarks JOIN moz_places ON moz_bookmarks.fk = moz_places.id WHERE moz_bookmarks.type = 1',
+            (err, rows) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve(rows)
+              }
+            }
+          )
+        })
+
+        db.close()
+        bookmarks = rows
+      } else if (browser === 'safari') {
+        if (platform !== 'darwin') {
+          throw new Error('Safari bookmarks can only be accessed on macOS')
+        }
+
+        const bookmarksPath = path.join(os.homedir(), 'Library', 'Safari', 'Bookmarks.plist')
+        const data = fs.readFileSync(bookmarksPath, 'utf-8')
+        bookmarks = plist.parse(data).Children
+      } else if (browser === 'whale') {
+        let bookmarksPath
+        if (platform === 'win32') {
+          bookmarksPath = path.join(
+            os.homedir(),
+            'AppData',
+            'Local',
+            'Naver',
+            'Naver Whale',
+            'User Data',
+            'Default',
+            'Bookmarks'
+          )
+        } else if (platform === 'darwin') {
+          bookmarksPath = path.join(
+            os.homedir(),
+            'Library',
+            'Application Support',
+            'Naver',
+            'Naver Whale',
+            'Default',
+            'Bookmarks'
+          )
+        } else if (platform === 'linux') {
+          bookmarksPath = path.join(os.homedir(), '.config', 'Naver Whale', 'Default', 'Bookmarks')
+        } else {
+          throw new Error('Unsupported platform')
+        }
+
+        const data = fs.readFileSync(bookmarksPath, 'utf-8')
+        bookmarks = JSON.parse(data).roots.bookmark_bar.children
+      } else {
+        throw new Error('Unsupported browser')
+      }
+
+      return bookmarks
+    } catch (error) {
+      console.error(`Error getting bookmarks for ${browser}:`, error)
+      throw error
     }
   })
 
