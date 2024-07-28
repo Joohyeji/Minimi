@@ -1,50 +1,35 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import { MINIMIES_COLLECTION } from '../../firebase'
-import { isWhitespace } from '../../utils/validation'
-import { uploadWallpaperToFirebase } from '../../hooks/useUpload'
 import useReadMinimi from '../../hooks/useReadMinimi'
 
-import useAuthStore from '../../store/useAuthStore'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import useReadMinimiStore from '../../store/useReadMinimiStore'
 
 import SettingInput from './SettingInput'
-import SettingCard from './SettingCard'
 import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
 import { SETTING_CARD_LISTS } from '../../constants/constants'
 
-function CreateMinimi() {
+function ReadMinimiCard() {
   const navigate = useNavigate()
   const { id } = useParams()
 
   const [isHovered, setIsHovered] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
 
-  const { user } = useAuthStore()
   const { setErrorText, setVisible, setToastMessage } = useErrorStore()
   const { existingMinimiData, setExistingMinimiData } = useReadMinimiStore()
   const {
-    markerPosition,
-    placeName,
-    minimiName,
     settingInputLists,
     settingCardLists,
     addSettingInputLists,
     initSettingInputLists,
     initSettingCardLists,
     removeFromSettingCardLists,
-    minimiBrightness,
-    minimiVolume,
-    wallpaper,
-    executables,
-    bookmarks,
-    selectedBrowser,
-    resetMinimiData,
-    setPrevClosestMinimi
+    resetMinimiData
   } = useMinimiStore()
 
   useReadMinimi()
@@ -61,58 +46,8 @@ function CreateMinimi() {
     setShowTooltip(true)
   }
 
-  const handleDoneBtnClick = async () => {
-    setErrorText('minimiName', '')
-
-    if (isWhitespace(minimiName)) {
-      setErrorText('minimiName', '공백만으로 이루어질 수 없습니다.')
-      return
-    }
-
-    let wallpaperUrl = null
-
-    if (wallpaper) {
-      try {
-        wallpaperUrl = await uploadWallpaperToFirebase(wallpaper)
-      } catch (error) {
-        setToastMessage(`이미지 업로드 중 오류가 발생했습니다: ${error}`)
-        setVisible(true)
-        return
-      }
-    }
-
-    const minimiData = {
-      uid: user.uid,
-      user: user.displayName,
-      title: minimiName,
-      location: markerPosition,
-      address: placeName,
-      volume: minimiVolume,
-      brightness: minimiBrightness,
-      wallpaper: wallpaperUrl,
-      executables: executables,
-      bookmarks: { bookmarks, selectedBrowser },
-      date: new Date().toISOString()
-    }
-
-    try {
-      if (id) {
-        const minimiDocRef = doc(MINIMIES_COLLECTION, id)
-        await setDoc(minimiDocRef, minimiData)
-        setPrevClosestMinimi(null)
-      } else {
-        const newMinimi = doc(MINIMIES_COLLECTION)
-        await setDoc(newMinimi, minimiData)
-      }
-
-      setToastMessage('성공적으로 저장되었습니다.')
-      setVisible(true)
-
-      navigate('/dashboard/myminimies')
-    } catch (error) {
-      setToastMessage(`저장 중 오류가 발생했습니다. ${error}`)
-      setVisible(true)
-    }
+  const handleApplyBtnClick = async () => {
+    /** APPLY버튼 클릭 시 미리보기 구현 */
   }
 
   useEffect(() => {
@@ -161,8 +96,6 @@ function CreateMinimi() {
         const displayKey =
           key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
 
-        // 조건: 해당 키가 null이 아니고, SETTING_CARD_LISTS에 포함되는 경우
-        // 추가 조건: 키가 bookmarks인 경우 내부 요소들이 null이 아닌지 체크
         if (existingMinimiData[key] === null) {
           return false
         }
@@ -222,19 +155,14 @@ function CreateMinimi() {
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-3/4">
           <SettingInput />
           {settingInputLists.map((setting, index) => (
-            <SettingInput key={index} setting={setting} params={id} />
+            <SettingInput key={index} setting={setting} params={id} isOtherMinimi={true} />
           ))}
-          <div className="flex justify-center w-10/12 gap-8">
-            {settingCardLists.map((cardText, index) => (
-              <SettingCard key={index} cardText={cardText} />
-            ))}
-          </div>
         </section>
         <button
-          onClick={handleDoneBtnClick}
+          onClick={handleApplyBtnClick}
           className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700"
         >
-          DONE .
+          APPLY.
         </button>
       </div>
       <div className="relative ml-5 w-2/5 h-[680px] bg-gray-100 -mt-[40px] -mr-7">
@@ -258,4 +186,4 @@ function CreateMinimi() {
   )
 }
 
-export default CreateMinimi
+export default ReadMinimiCard

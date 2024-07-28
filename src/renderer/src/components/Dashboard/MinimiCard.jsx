@@ -8,6 +8,7 @@ import useDeleteMinimiStore from '../../store/useDeleteMinimiStore'
 import checkIcon from '../../assets/img/check_icon.svg'
 
 function MinimiCard({
+  isOtherMinimi,
   user,
   id,
   address,
@@ -65,7 +66,7 @@ function MinimiCard({
       if (executables !== null) {
         await runExecutables(executables)
       }
-      if (bookmarks) {
+      if (bookmarks !== null) {
         const { bookmarks: minimiBookmarks, selectedBrowser: minimiBrowser } = bookmarks
         updateBookmarks(minimiBrowser, minimiBookmarks)
       }
@@ -82,6 +83,10 @@ function MinimiCard({
   }, [closestMinimi])
 
   const handleCardClick = () => {
+    if (isOtherMinimi) {
+      navigate(`/readminimi/${id}`)
+      return
+    }
     navigate(`/createminimi/${id}`)
   }
 
@@ -152,7 +157,8 @@ MinimiCard.propTypes = {
   volume: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wallpaper: PropTypes.string,
   executables: PropTypes.array,
-  bookmarks: PropTypes.object
+  bookmarks: PropTypes.object,
+  isOtherMinimi: PropTypes.bool
 }
 
 export default MinimiCard

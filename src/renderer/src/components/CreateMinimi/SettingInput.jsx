@@ -11,7 +11,7 @@ import MultiSelectDropdown from '../Common/MultiSelectDropdown'
 import { BROWSERS_LIST } from '../../constants/constants'
 import x_icon from '../../assets/img/x_icon.png'
 
-function SettingInput({ setting }) {
+function SettingInput({ setting, isOtherMinimi }) {
   const {
     minimiName,
     setMinimiName,
@@ -100,6 +100,7 @@ function SettingInput({ setting }) {
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
               onChange={handleBrightnessChange}
               value={minimiBrightness || 50}
+              disabled={isOtherMinimi}
             />
             <p className="text-sm font-light mr-2 mt-1">{minimiBrightness}</p>
           </>
@@ -114,6 +115,7 @@ function SettingInput({ setting }) {
               className="w-full h-1 mt-3 bg-black rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700 range-thumb"
               onChange={handleVolumeChange}
               value={minimiVolume || 50}
+              disabled={isOtherMinimi}
             />
             <p className="text-sm font-light mr-2 mt-1">{minimiVolume}</p>
           </>
@@ -127,7 +129,7 @@ function SettingInput({ setting }) {
               </p>
               <label
                 htmlFor="inputFile"
-                className="block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate w-[145px]"
+                className={`block text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer ${isOtherMinimi ? 'cursor-not-allowed opacity-50' : 'hover:bg-neutral-700'} truncate w-[145px]`}
               >
                 Choose Wallpaper
               </label>
@@ -137,12 +139,13 @@ function SettingInput({ setting }) {
                 accept="image/png, image/jpeg, image/jpg"
                 className="hidden"
                 onChange={handleWallpaperChange}
+                disabled={isOtherMinimi}
               />
             </div>
           </div>
         )
       case 'Auto Run':
-        return <MultiSelectDropdown />
+        return <MultiSelectDropdown disabled={isOtherMinimi} />
       case 'Bookmarks':
         return (
           <div className="flex flex-col w-full gap-3">
@@ -156,16 +159,20 @@ function SettingInput({ setting }) {
                       value={bookmarks}
                       checked={selectedBrowser === bookmarks}
                       onChange={handleBrowserChange}
+                      disabled={isOtherMinimi}
                     />
                     {bookmarks}
                   </label>
                 )
               })}
-              <button className="bg-black w-[30px] h-[30px] text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700">
+              <button
+                className={`bg-black w-[30px] h-[30px] text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer ${isOtherMinimi ? 'cursor-not-allowed opacity-50' : 'hover:bg-neutral-700'}`}
+                disabled={isOtherMinimi}
+              >
                 +
               </button>
             </div>
-            <MultiSelectDropdown type={'bookmarks'} />
+            <MultiSelectDropdown type={'bookmarks'} disabled={isOtherMinimi} />
           </div>
         )
       default:
@@ -176,6 +183,7 @@ function SettingInput({ setting }) {
             value={minimiName || ''}
             className="w-full border-b-2 outline-none font-bold focus:border-black"
             onChange={handleInputChange}
+            readOnly={isOtherMinimi}
           />
         )
     }
@@ -193,16 +201,19 @@ function SettingInput({ setting }) {
           </div>
           {!setting && <ErrorText message={errorText.minimiName} />}
         </div>
-        <button onClick={handleXBtnClick} className="right-20 top-2 h-full hover:rotate-90">
-          {setting ? <img src={x_icon} alt="x-button" className="w-[30px]" /> : null}
-        </button>
+        {!isOtherMinimi && (
+          <button onClick={handleXBtnClick} className="right-20 top-2 h-full hover:rotate-90">
+            {setting ? <img src={x_icon} alt="x-button" className="w-[30px]" /> : null}
+          </button>
+        )}
       </div>
     </div>
   )
 }
 
 SettingInput.propTypes = {
-  setting: PropTypes.string
+  setting: PropTypes.string,
+  isOtherMinimi: PropTypes.bool
 }
 
 export default SettingInput

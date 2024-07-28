@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard/Dashboard'
 import MyMinimies from './components/Dashboard/MyMinimies'
 import ExploreMore from './components/Dashboard/ExploreMore'
 import CreateMinimi from './components/CreateMinimi/CreateMinimi'
+import ReadMinimiCard from './components/CreateMinimi/ReadMinimiCard'
 import ToastMessage from './components/Common/ToastMessage'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             </Route>
             <Route path="/createminimi" element={<CreateMinimi />} />
             <Route path="/createminimi/:id" element={<CreateMinimi />} />
+            <Route path="/readminimi/:id" element={<ReadMinimiCard />} />
           </Routes>
         </div>
         <ToastMessage />

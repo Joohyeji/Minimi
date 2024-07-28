@@ -13,7 +13,6 @@ function UserInfo({ userName }) {
   const navigate = useNavigate()
 
   const selectRef = useRef(null)
-  // const [isSettingToggle, setSettingToggle] = useState(false)
   const [isTimerToggle, setTimerToggle] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(0)
 
