@@ -10,7 +10,9 @@ const api = {
   setWallpaper: (url) => ipcRenderer.invoke('set-wallpaper', url),
   getExecutables: () => ipcRenderer.invoke('get-executables'),
   runExecutables: (paths) => ipcRenderer.invoke('run-executables', paths),
-  getBookmarks: (browser) => ipcRenderer.invoke('get-bookmarks', browser)
+  getBookmarks: (browser) => ipcRenderer.invoke('get-bookmarks', browser),
+  updateBookmarks: (browser, bookmarks) =>
+    ipcRenderer.invoke('update-bookmarks', browser, bookmarks)
 }
 
 if (process.contextIsolated) {

@@ -41,6 +41,8 @@ function CreateMinimi() {
     minimiVolume,
     wallpaper,
     executables,
+    bookmarks,
+    selectedBrowser,
     resetMinimiData,
     setPrevClosestMinimi
   } = useMinimiStore()
@@ -89,6 +91,7 @@ function CreateMinimi() {
       brightness: minimiBrightness,
       wallpaper: wallpaperUrl,
       executables: executables,
+      bookmarks: { bookmarks, selectedBrowser },
       date: new Date().toISOString()
     }
 

@@ -13,8 +13,10 @@ const useMinimiStore = create((set) => ({
   minimiBrightness: null,
   wallpaper: null,
   executables: null,
-  baseBookmarks: null,
   bookmarks: null,
+
+  baseBookmarks: null,
+  selectedBrowser: null,
 
   prevClosestMinimi: null,
   closestMinimi: null,
@@ -51,6 +53,7 @@ const useMinimiStore = create((set) => ({
   },
   setBaseBookmarks: (bookmarks) => set({ baseBookmarks: bookmarks }),
   setBookmarks: (bookmarks) => set({ bookmarks: bookmarks }),
+  setSelectedBrowser: (browser) => set({ selectedBrowser: browser }),
 
   resetMinimiData: () =>
     set({

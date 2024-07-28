@@ -24,8 +24,10 @@ function SettingInput({ setting }) {
     wallpaper,
     setWallpaper,
     setExecutables,
-    baseBookmarks,
-    setBaseBookmarks
+    setBaseBookmarks,
+    setBookmarks,
+    selectedBrowser,
+    setSelectedBrowser
   } = useMinimiStore()
   const { errorText } = useErrorStore()
   const { user } = useAuthStore()
@@ -72,9 +74,11 @@ function SettingInput({ setting }) {
     if (setting === 'Auto Run') {
       setExecutables(null)
     }
-  }
 
-  const [selectedBrowser, setSelectedBrowser] = useState('')
+    if (setting === 'Bookmarks') {
+      setBookmarks(null)
+    }
+  }
 
   const handleBrowserChange = async (event) => {
     const selectedBrowser = event.target.value

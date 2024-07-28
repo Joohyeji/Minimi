@@ -165,6 +165,26 @@ app.whenReady().then(() => {
     }
   })
 
+  ipcMain.handle('run-executables', (event, executablePaths) => {
+    if (Array.isArray(executablePaths)) {
+      executablePaths.forEach((executablePath) => {
+        if (fs.existsSync(executablePath)) {
+          execFile(executablePath, (err, data) => {
+            if (err) {
+              console.error(`Error executing file ${executablePath}:`, err)
+            } else {
+              console.log(`Executable output from ${executablePath}:`, data)
+            }
+          })
+        } else {
+          console.error(`Executable path does not exist: ${executablePath}`)
+        }
+      })
+    } else {
+      console.error('Invalid argument: executablePaths should be an array')
+    }
+  })
+
   ipcMain.handle('get-bookmarks', async (event, browser) => {
     try {
       let bookmarks
@@ -296,6 +316,68 @@ app.whenReady().then(() => {
       return bookmarks
     } catch (error) {
       console.error(`Error getting bookmarks for ${browser}:`, error)
+      throw error
+    }
+  })
+
+  ipcMain.handle('update-bookmarks', async (event, browser, newBookmarks) => {
+    try {
+      let bookmarksPath
+      const platform = os.platform()
+
+      if (browser === 'chrome' || browser === 'edge') {
+        bookmarksPath = path.join(
+          os.homedir(),
+          platform === 'win32'
+            ? `AppData\\Local\\${browser === 'chrome' ? 'Google\\Chrome\\User Data\\Default\\Bookmarks' : 'Microsoft\\Edge\\User Data\\Default\\Bookmarks'}`
+            : platform === 'darwin'
+              ? `Library/Application Support/${browser === 'chrome' ? 'Google/Chrome/Default/Bookmarks' : 'Microsoft/Edge/Default/Bookmarks'}`
+              : `.config/${browser === 'chrome' ? 'google-chrome/Default/Bookmarks' : 'microsoft-edge/Default/Bookmarks'}`
+        )
+      } else {
+        throw new Error('Unsupported browser for update')
+      }
+
+      const bookmarksData = {
+        checksum: '',
+        roots: {
+          bookmark_bar: {
+            children: newBookmarks.map((bookmark) => ({
+              date_added: bookmark.date_added || new Date().getTime().toString(),
+              date_last_used: bookmark.date_last_used || new Date().getTime().toString(),
+              guid: bookmark.guid || '',
+              id: bookmark.id || new Date().getTime().toString(),
+              meta_info: bookmark.meta_info || {},
+              name: bookmark.name,
+              type: bookmark.type || 'url',
+              url: bookmark.url || ''
+            })),
+            date_added: new Date().getTime().toString(),
+            date_modified: new Date().getTime().toString(),
+            id: '1',
+            name: 'Bookmarks Bar',
+            type: 'folder'
+          },
+          other: {
+            children: [],
+            id: '2',
+            name: 'Other Bookmarks',
+            type: 'folder'
+          },
+          synced: {
+            children: [],
+            id: '3',
+            name: 'Mobile Bookmarks',
+            type: 'folder'
+          }
+        },
+        version: 1
+      }
+
+      fs.writeFileSync(bookmarksPath, JSON.stringify(bookmarksData, null, 2), 'utf-8')
+      return { success: true }
+    } catch (error) {
+      console.error(`Error updating bookmarks for ${browser}:`, error)
       throw error
     }
   })

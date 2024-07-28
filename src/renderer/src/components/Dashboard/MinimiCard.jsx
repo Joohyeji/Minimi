@@ -7,7 +7,17 @@ import useErrorStore from '../../store/useErrorStore'
 import useDeleteMinimiStore from '../../store/useDeleteMinimiStore'
 import checkIcon from '../../assets/img/check_icon.svg'
 
-function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, executables }) {
+function MinimiCard({
+  user,
+  id,
+  address,
+  title,
+  brightness,
+  volume,
+  wallpaper,
+  executables,
+  bookmarks
+}) {
   const navigate = useNavigate()
 
   const { prevClosestMinimi, setPrevClosestMinimi, closestMinimi } = useMinimiStore()
@@ -37,6 +47,10 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, e
     await window.api.runExecutables(paths)
   }
 
+  const updateBookmarks = async (browser, newBookmarks) => {
+    await window.api.updateBookmarks(browser, newBookmarks)
+  }
+
   useEffect(() => {
     const updateComputerSetting = async () => {
       if (brightness !== null) {
@@ -50,6 +64,10 @@ function MinimiCard({ user, id, address, title, brightness, volume, wallpaper, e
       }
       if (executables !== null) {
         await runExecutables(executables)
+      }
+      if (bookmarks) {
+        const { bookmarks: minimiBookmarks, selectedBrowser: minimiBrowser } = bookmarks
+        updateBookmarks(minimiBrowser, minimiBookmarks)
       }
     }
 
@@ -133,7 +151,8 @@ MinimiCard.propTypes = {
   brightness: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   volume: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   wallpaper: PropTypes.string,
-  executables: PropTypes.array
+  executables: PropTypes.array,
+  bookmarks: PropTypes.object
 }
 
 export default MinimiCard

@@ -13,7 +13,7 @@ const MultiSelectDropdown = ({ type }) => {
   const [selectedBookmarks, setSelectedBookmarks] = useState([])
 
   const { setToastMessage, setVisible, isLoading, setLoading } = useErrorStore()
-  const { executables, setExecutables, baseBookmarks } = useMinimiStore()
+  const { executables, setExecutables, baseBookmarks, setBookmarks } = useMinimiStore()
   const { executeOptions } = useReadMinimiStore()
 
   const dropdownRef = useRef(null)
@@ -113,10 +113,16 @@ const MultiSelectDropdown = ({ type }) => {
   }, [])
 
   useEffect(() => {
-    if (baseBookmarks && baseBookmarks.length > 0) {
-      setSelectedBookmarks(flattenBookmarks(baseBookmarks))
+    if (type) {
+      if (baseBookmarks && baseBookmarks.length > 0) {
+        setSelectedBookmarks(flattenBookmarks(baseBookmarks))
+      }
     }
   }, [baseBookmarks])
+
+  useEffect(() => {
+    setBookmarks(selectedBookmarks)
+  }, [selectedBookmarks])
 
   return (
     <div className="relative inline-block w-full" ref={dropdownRef}>

@@ -11,6 +11,7 @@ const useReadMinimi = () => {
     setMinimiBrightness,
     setMinimiVolume,
     setWallpaper,
+    setBookmarks,
     setExecutables
   } = useMinimiStore()
 
@@ -23,7 +24,8 @@ const useReadMinimi = () => {
         brightness: setMinimiBrightness,
         volume: setMinimiVolume,
         wallpaper: setWallpaper,
-        executables: setExecutables
+        executables: setExecutables,
+        bookmarks: setBookmarks
       }
 
       Object.entries(existingMinimiData).forEach(([key, value]) => {
