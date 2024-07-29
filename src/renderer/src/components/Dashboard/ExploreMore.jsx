@@ -13,7 +13,7 @@ function ExploreMore() {
   const [visibleItems, setVisibleItems] = useState([])
 
   const { user, nowLocation } = useAuthStore()
-  const { otherMinimiPosts, setOtherMinimiPosts } = usePostsStore()
+  const { otherMinimiPosts, setOtherMinimiPosts, searchQuery } = usePostsStore()
   const { setVisible, setToastMessage, isLoading, setLoading } = useErrorStore()
 
   const haversineDistance = (coords1, coords2) => {
@@ -38,10 +38,16 @@ function ExploreMore() {
 
       const otherMinimiesQuery = query(MINIMIES_COLLECTION, where('uid', '!=', userId))
       const otherMinimies = await getDocs(otherMinimiesQuery)
-      const otherMinimiesData = otherMinimies.docs.map((doc) => ({
+      let otherMinimiesData = otherMinimies.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }))
+
+      if (searchQuery) {
+        otherMinimiesData = otherMinimiesData.filter((minimi) =>
+          minimi.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      }
 
       const filteredMinimies = otherMinimiesData.filter((minimi) => {
         const minimiLocation = minimi.location
@@ -69,7 +75,7 @@ function ExploreMore() {
     if (user?.uid) {
       fetchOtherMinimies(user.uid)
     }
-  }, [user, nowLocation])
+  }, [user, nowLocation, searchQuery])
 
   return (
     <div className="relative mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto p-3 h-[564px]">
@@ -88,7 +94,7 @@ function ExploreMore() {
         ))
       ) : (
         <p className="absolute font-regular text-neutral-400 text-lg">
-          해당 위치에 Minimi가 존재하지 않습니다.
+          {searchQuery ? '검색 결과가 없습니다.' : '해당 위치에 Minimi가 존재하지 않습니다.'}
         </p>
       )}
     </div>
