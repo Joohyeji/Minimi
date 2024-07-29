@@ -7,7 +7,7 @@ import useAuthStore from '../../store/useAuthStore'
 
 import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
-import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE } from '../../constants/constants'
+import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE, RADIUS } from '../../constants/constants'
 
 function Map({ isSettingMap, isOtherMinimi }) {
   const mapRef = useRef(null)
@@ -28,7 +28,7 @@ function Map({ isSettingMap, isOtherMinimi }) {
     strokeWeight: 1,
     fillColor: '#B3F289',
     fillOpacity: 0.35,
-    radius: 5
+    radius: RADIUS
   }
 
   const fetchPlaceName = (position) => {
@@ -96,7 +96,7 @@ function Map({ isSettingMap, isOtherMinimi }) {
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={markerPosition}
-          zoom={15}
+          zoom={17}
           onLoad={handleMapLoad}
           onClick={isOtherMinimi ? null : handleMapClick}
           options={options}
