@@ -33,7 +33,6 @@ function SettingInput({ setting, isOtherMinimi }) {
   const { user } = useAuthStore()
 
   const [isVisible, setIsVisible] = useState(false)
-  const userId = user.uid
 
   useEffect(() => {
     setIsVisible(true)
@@ -81,6 +80,7 @@ function SettingInput({ setting, isOtherMinimi }) {
   }
 
   const handleBrowserChange = async (event) => {
+    const userId = user.uid
     const selectedBrowser = event.target.value
     setSelectedBrowser(selectedBrowser)
 

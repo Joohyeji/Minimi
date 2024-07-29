@@ -1,10 +1,20 @@
+import { useNavigate } from 'react-router-dom'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import updateComputerSetting from '../../utils/updateComputerSetting'
 
 const Modal = () => {
+  const navigate = useNavigate()
+
   const { isModalOpen, setIsModalOpen } = useErrorStore()
-  const { closestMinimi, currentComputerSetting } = useMinimiStore()
+  const {
+    closestMinimi,
+    currentComputerSetting,
+    setCurrentComputerSetting,
+    setPrevClosestMinimi,
+    setClosestMinimi,
+    previewMinimi
+  } = useMinimiStore()
 
   const handleNoBtnClick = () => {
     if (closestMinimi) {
@@ -15,7 +25,16 @@ const Modal = () => {
 
       updateComputerSetting(brightness, volume, wallpaper)
     }
+    setCurrentComputerSetting(null)
+
     setIsModalOpen(false)
+  }
+
+  const handleApplyBtnClick = () => {
+    setPrevClosestMinimi(previewMinimi)
+    setClosestMinimi(previewMinimi)
+    setIsModalOpen(false)
+    navigate('/dashboard/explore')
   }
 
   return (
@@ -31,7 +50,10 @@ const Modal = () => {
               >
                 No
               </button>
-              <button className="mt-4 bg-black text-white px-4 py-2 rounded-md hover:bg-neutral-700">
+              <button
+                onClick={handleApplyBtnClick}
+                className="mt-4 bg-black text-white px-4 py-2 rounded-md hover:bg-neutral-700"
+              >
                 Apply
               </button>
             </div>
