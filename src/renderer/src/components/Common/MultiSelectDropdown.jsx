@@ -7,7 +7,7 @@ import Loading from '../Common/Loading'
 import BookmarkItem from './BookmarkItem'
 import { MAX_SELECT_AUTORUN } from '../../constants/constants'
 
-const MultiSelectDropdown = ({ type }) => {
+const MultiSelectDropdown = ({ type, disabled }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState([])
   const [selectedBookmarks, setSelectedBookmarks] = useState([])
@@ -127,7 +127,7 @@ const MultiSelectDropdown = ({ type }) => {
   return (
     <div className="relative inline-block w-full" ref={dropdownRef}>
       <button
-        onClick={handleToggle}
+        onClick={disabled ? null : handleToggle}
         className="text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate flex items-center justify-between w-full"
       >
         {buttonText}
@@ -183,7 +183,8 @@ const MultiSelectDropdown = ({ type }) => {
 }
 
 MultiSelectDropdown.propTypes = {
-  type: PropTypes.string
+  type: PropTypes.string,
+  disabled: PropTypes.bool
 }
 
 export default MultiSelectDropdown
