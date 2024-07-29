@@ -17,13 +17,11 @@ function MyMinimies() {
   const { setVisible, setToastMessage, isLoading, setLoading } = useErrorStore()
 
   const fetchUserMinimies = async (userId) => {
+    setLoading(true)
     try {
-      setLoading(true)
-
       const myMinimiesQuery = query(MINIMIES_COLLECTION, where('uid', '==', userId))
-
-      const myMinimies = await getDocs(myMinimiesQuery)
-      let myMinimiesData = myMinimies.docs.map((doc) => ({
+      const myMinimiesSnapshot = await getDocs(myMinimiesQuery)
+      let myMinimiesData = myMinimiesSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }))
@@ -35,17 +33,12 @@ function MyMinimies() {
       }
 
       setMinimiPosts(myMinimiesData)
-      setLoading(false)
-
-      const itemsToShow = [...myMinimiesData, 'create']
-      itemsToShow.forEach((_, index) => {
-        setTimeout(() => {
-          setVisibleItems((prev) => [...prev, index])
-        }, index * 100)
-      })
+      setVisibleItems(Array.from({ length: myMinimiesData.length + 1 }, (_, index) => index))
     } catch (error) {
       setToastMessage('Minimi 가져오기에 실패했습니다.')
       setVisible(true)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -61,18 +54,24 @@ function MyMinimies() {
         <Loading />
       ) : (
         <>
-          {minimiPosts.map((minimi, index) => (
-            <div
-              key={minimi.id}
-              className={`transform transition duration-500 ease-in-out ${
-                visibleItems.includes(index)
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-5'
-              }`}
-            >
-              <MinimiCard {...minimi} />
-            </div>
-          ))}
+          {minimiPosts.length > 0
+            ? minimiPosts.map((minimi, index) => (
+                <div
+                  key={minimi.id}
+                  className={`transform transition duration-500 ease-in-out ${
+                    visibleItems.includes(index)
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-5'
+                  }`}
+                >
+                  <MinimiCard {...minimi} />
+                </div>
+              ))
+            : searchQuery && (
+                <p className="absolute font-regular text-neutral-400 text-lg">
+                  검색 결과가 없습니다.
+                </p>
+              )}
           {!searchQuery && (
             <div
               key="create"
@@ -85,14 +84,9 @@ function MyMinimies() {
               <CreateMinimiCard />
             </div>
           )}
-          {searchQuery && minimiPosts.length == 0 ? (
-            <p className="absolute font-regular text-neutral-400 text-lg">
-              {searchQuery ? '검색 결과가 없습니다.' : '해당 위치에 Minimi가 존재하지 않습니다.'}
-            </p>
-          ) : null}
         </>
       )}
-      <DeleteButton uid={user.uid} onFetch={fetchUserMinimies} />
+      <DeleteButton uid={user.uid} onFetch={() => fetchUserMinimies(user.uid)} />
     </div>
   )
 }
