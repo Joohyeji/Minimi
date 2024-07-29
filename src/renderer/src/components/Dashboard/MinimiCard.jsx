@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import useMinimiStore from '../../store/useMinimiStore'
 import useErrorStore from '../../store/useErrorStore'
 import useDeleteMinimiStore from '../../store/useDeleteMinimiStore'
+import updateComputerSetting from '../../utils/updateComputerSetting'
 import checkIcon from '../../assets/img/check_icon.svg'
 
 function MinimiCard({
@@ -27,54 +28,10 @@ function MinimiCard({
 
   const [isSelected, setSelected] = useState(false)
 
-  const changeBrightness = async (level) => {
-    await window.api.setBrightness(level)
-  }
-
-  const changeVolume = async (level) => {
-    if (level == 0) {
-      await window.api.setMuted(true)
-    } else {
-      await window.api.setMuted(false)
-    }
-    await window.api.setVolume(level)
-  }
-
-  const setWallpaper = async (imageUrl) => {
-    await window.api.setWallpaper(imageUrl)
-  }
-
-  const runExecutables = async (paths) => {
-    await window.api.runExecutables(paths)
-  }
-
-  const updateBookmarks = async (browser, newBookmarks) => {
-    await window.api.updateBookmarks(browser, newBookmarks)
-  }
-
   useEffect(() => {
-    const updateComputerSetting = async () => {
-      if (brightness !== null) {
-        await changeBrightness(brightness * 0.01)
-      }
-      if (volume !== null) {
-        await changeVolume(volume)
-      }
-      if (wallpaper !== null) {
-        await setWallpaper(wallpaper)
-      }
-      if (executables !== null) {
-        await runExecutables(executables)
-      }
-      if (bookmarks !== null) {
-        const { bookmarks: minimiBookmarks, selectedBrowser: minimiBrowser } = bookmarks
-        updateBookmarks(minimiBrowser, minimiBookmarks)
-      }
-    }
-
     if (id === closestMinimi?.id) {
       if (closestMinimi?.id !== prevClosestMinimi?.id) {
-        updateComputerSetting()
+        updateComputerSetting(brightness, volume, wallpaper, executables, bookmarks)
         setToastMessage(`${title} 세팅으로 적용되었습니다.`)
         setVisible(true)
       }
