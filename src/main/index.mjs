@@ -142,11 +142,28 @@ app.whenReady().then(() => {
     }
   })
 
+  ipcMain.handle('get-wallpaper', async (event) => {
+    try {
+      const { getWallpaper } = await import('wallpaper')
+      const currentWallpaper = await getWallpaper()
+      return currentWallpaper
+    } catch (error) {
+      console.error('Error getting wallpaper:', error)
+      return null
+    }
+  })
+
   ipcMain.handle('set-wallpaper', async (event, imageUrl) => {
     try {
-      const imagePath = await downloadImage(imageUrl)
-      const { setWallpaper } = await import('wallpaper')
+      let imagePath
 
+      if (imageUrl.startsWith('https://firebasestorage')) {
+        imagePath = await downloadImage(imageUrl)
+      } else {
+        imagePath = imageUrl
+      }
+
+      const { setWallpaper } = await import('wallpaper')
       await setWallpaper(imagePath)
 
       return true
@@ -186,6 +203,9 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('get-bookmarks', async (event, browser) => {
+    if (!browser) {
+      return
+    }
     try {
       let bookmarks
       const platform = os.platform()
