@@ -11,6 +11,7 @@ const useErrorStore = create((set) => ({
     passwordCheck: '',
     minimiName: ''
   },
+  isModalOpen: false,
 
   setLoading: (loading) => set({ isLoading: loading }),
   setVisible: (visible) => set({ isToastVisible: visible }),
@@ -18,7 +19,8 @@ const useErrorStore = create((set) => ({
   setErrorText: (field, text) =>
     set((state) => ({
       errorText: { ...state.errorText, [field]: text }
-    }))
+    })),
+  setIsModalOpen: (state) => set({ isModalOpen: state })
 }))
 
 export default useErrorStore

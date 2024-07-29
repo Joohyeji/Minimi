@@ -9,7 +9,7 @@ import Loading from '../Common/Loading'
 import markerIcon from '../../../src/assets/img/marker_icon.svg'
 import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE } from '../../constants/constants'
 
-function Map({ isSettingMap }) {
+function Map({ isSettingMap, isOtherMinimi }) {
   const mapRef = useRef(null)
 
   const { nowLocation, setNowLocation } = useAuthStore()
@@ -98,7 +98,7 @@ function Map({ isSettingMap }) {
           center={markerPosition}
           zoom={15}
           onLoad={handleMapLoad}
-          onClick={handleMapClick}
+          onClick={isOtherMinimi ? null : handleMapClick}
           options={options}
         >
           <Circle center={markerPosition} options={circleOptions} />
@@ -118,7 +118,8 @@ function Map({ isSettingMap }) {
 }
 
 Map.propTypes = {
-  isSettingMap: PropTypes.bool
+  isSettingMap: PropTypes.bool,
+  isOtherMinimi: PropTypes.bool
 }
 
 export default Map

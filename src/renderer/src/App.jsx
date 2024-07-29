@@ -11,10 +11,13 @@ import CreateMinimi from './components/CreateMinimi/CreateMinimi'
 import ReadMinimiCard from './components/CreateMinimi/ReadMinimiCard'
 import ToastMessage from './components/Common/ToastMessage'
 
+import Modal from './components/Common/Modal'
+
 function App() {
   return (
     <Router>
       <div className="pt-5 h-full">
+        <Modal />
         <Header />
         <div className="px-12 mt-10">
           <Routes>
