@@ -72,7 +72,7 @@ function ExploreMore() {
   }, [user, nowLocation])
 
   return (
-    <div className="mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto p-3 h-[564px]">
+    <div className="relative mt-10 grid grid-cols-5 gap-12 gap-y-16 overflow-auto p-3 h-[564px]">
       {isLoading ? (
         <Loading />
       ) : otherMinimiPosts.length > 0 ? (
@@ -87,7 +87,9 @@ function ExploreMore() {
           </div>
         ))
       ) : (
-        <p>Minimi가 존재하지 않습니다.</p>
+        <p className="absolute font-regular text-neutral-400 text-lg">
+          해당 위치에 Minimi가 존재하지 않습니다.
+        </p>
       )}
     </div>
   )

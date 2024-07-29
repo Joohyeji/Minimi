@@ -6,7 +6,9 @@ import useReadMinimi from '../../hooks/useReadMinimi'
 
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
+import usePostsStore from '../../store/usePostsStore'
 import useReadMinimiStore from '../../store/useReadMinimiStore'
+import updateComputerSetting from '../../utils/updateComputerSetting'
 
 import SettingInput from './SettingInput'
 import Map from './Map'
@@ -18,6 +20,7 @@ function ReadMinimiCard() {
   const { id } = useParams()
 
   const { setErrorText, setVisible, setToastMessage, setIsModalOpen } = useErrorStore()
+  const { otherMinimiPosts } = usePostsStore()
   const { existingMinimiData, setExistingMinimiData } = useReadMinimiStore()
   const {
     settingInputLists,
@@ -26,7 +29,9 @@ function ReadMinimiCard() {
     initSettingInputLists,
     initSettingCardLists,
     removeFromSettingCardLists,
-    resetMinimiData
+    resetMinimiData,
+    setPreviewMinimi,
+    setCurrentComputerSetting
   } = useMinimiStore()
 
   useReadMinimi()
@@ -38,9 +43,23 @@ function ReadMinimiCard() {
     setExistingMinimiData(null)
   }
 
-  const handleApplyBtnClick = async () => {
-    /** APPLY버튼 클릭 시 미리보기 구현 */
-    console.log('APPLY 눌림')
+  const handlePreviewBtnClick = async () => {
+    const currentBrightness = (await window.api.getBrightness()) * 100
+    const currentVolume = await window.api.getVolume()
+    const currentWallpaper = await window.api.getWallpaper()
+    const currentState = {
+      brightness: currentBrightness,
+      volume: currentVolume,
+      wallpaper: currentWallpaper
+    }
+
+    const previewMinimi = otherMinimiPosts.find((post) => post.id === id)
+    const { brightness, volume, wallpaper, executables, bookmarks } = previewMinimi
+
+    setCurrentComputerSetting(currentState)
+
+    updateComputerSetting(brightness, volume, wallpaper, executables, bookmarks)
+    setPreviewMinimi(previewMinimi)
     setIsModalOpen(true)
   }
 
@@ -84,35 +103,37 @@ function ReadMinimiCard() {
     setVisible
   ])
 
-  if (id && existingMinimiData) {
-    const nonNullKeys = Object.keys(existingMinimiData)
-      .filter((key) => {
-        const displayKey =
-          key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+  useEffect(() => {
+    if (id && existingMinimiData) {
+      const nonNullKeys = Object.keys(existingMinimiData)
+        .filter((key) => {
+          const displayKey =
+            key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
 
-        if (existingMinimiData[key] === null) {
-          return false
-        }
-
-        if (key === 'bookmarks') {
-          const { bookmarks, selected } = existingMinimiData[key]
-          if (!bookmarks || bookmarks.length === 0 || !selected) {
+          if (existingMinimiData[key] === null) {
             return false
           }
+
+          if (key === 'bookmarks') {
+            const { bookmarks, selected } = existingMinimiData[key]
+            if (!bookmarks || bookmarks.length === 0 || !selected) {
+              return false
+            }
+          }
+
+          return SETTING_CARD_LISTS.includes(displayKey)
+        })
+        .map((key) => {
+          return key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+        })
+
+      nonNullKeys.forEach((key) => {
+        if (!settingInputLists.includes(key)) {
+          addSettingInputLists(key)
         }
-
-        return SETTING_CARD_LISTS.includes(displayKey)
       })
-      .map((key) => {
-        return key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
-      })
-
-    nonNullKeys.forEach((key) => {
-      if (!settingInputLists.includes(key)) {
-        addSettingInputLists(key)
-      }
-    })
-  }
+    }
+  }, [existingMinimiData])
 
   useEffect(() => {
     settingCardLists.forEach((card) => {
@@ -140,10 +161,10 @@ function ReadMinimiCard() {
           ))}
         </section>
         <button
-          onClick={handleApplyBtnClick}
+          onClick={handlePreviewBtnClick}
           className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700"
         >
-          APPLY.
+          PREVIEW.
         </button>
       </div>
       <div className="relative ml-5 w-2/5 h-[680px] bg-gray-100 -mt-[40px] -mr-7">

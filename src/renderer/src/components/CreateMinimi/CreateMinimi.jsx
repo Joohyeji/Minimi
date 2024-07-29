@@ -155,37 +155,37 @@ function CreateMinimi() {
     setVisible
   ])
 
-  if (id && existingMinimiData) {
-    const nonNullKeys = Object.keys(existingMinimiData)
-      .filter((key) => {
-        const displayKey =
-          key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+  useEffect(() => {
+    if (id && existingMinimiData) {
+      const nonNullKeys = Object.keys(existingMinimiData)
+        .filter((key) => {
+          const displayKey =
+            key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
 
-        // 조건: 해당 키가 null이 아니고, SETTING_CARD_LISTS에 포함되는 경우
-        // 추가 조건: 키가 bookmarks인 경우 내부 요소들이 null이 아닌지 체크
-        if (existingMinimiData[key] === null) {
-          return false
-        }
-
-        if (key === 'bookmarks') {
-          const { bookmarks, selected } = existingMinimiData[key]
-          if (!bookmarks || bookmarks.length === 0 || !selected) {
+          if (existingMinimiData[key] === null) {
             return false
           }
+
+          if (key === 'bookmarks') {
+            const { bookmarks, selected } = existingMinimiData[key]
+            if (!bookmarks || bookmarks.length === 0 || !selected) {
+              return false
+            }
+          }
+
+          return SETTING_CARD_LISTS.includes(displayKey)
+        })
+        .map((key) => {
+          return key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
+        })
+
+      nonNullKeys.forEach((key) => {
+        if (!settingInputLists.includes(key)) {
+          addSettingInputLists(key)
         }
-
-        return SETTING_CARD_LISTS.includes(displayKey)
       })
-      .map((key) => {
-        return key === 'executables' ? 'Auto Run' : key.charAt(0).toUpperCase() + key.slice(1)
-      })
-
-    nonNullKeys.forEach((key) => {
-      if (!settingInputLists.includes(key)) {
-        addSettingInputLists(key)
-      }
-    })
-  }
+    }
+  }, [existingMinimiData])
 
   useEffect(() => {
     settingCardLists.forEach((card) => {

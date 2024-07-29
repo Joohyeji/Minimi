@@ -20,6 +20,8 @@ const useMinimiStore = create((set) => ({
 
   prevClosestMinimi: null,
   closestMinimi: null,
+  previewMinimi: null,
+  currentComputerSetting: null,
 
   initSettingInputLists: () => set({ settingInputLists: [] }),
   initSettingCardLists: () => set({ settingCardLists: SETTING_CARD_LISTS }),
@@ -67,7 +69,9 @@ const useMinimiStore = create((set) => ({
       bookmarks: null
     }),
   setPrevClosestMinimi: (minimi) => set({ prevClosestMinimi: minimi }),
-  setClosestMinimi: (minimi) => set({ closestMinimi: minimi })
+  setClosestMinimi: (minimi) => set({ closestMinimi: minimi }),
+  setPreviewMinimi: (minimi) => set({ previewMinimi: minimi }),
+  setCurrentComputerSetting: (setting) => set({ currentComputerSetting: setting })
 }))
 
 export default useMinimiStore

@@ -15,7 +15,7 @@ import { RADIUS } from '../../constants/constants'
 function Dashbaord() {
   const { user, setUser, nowLocation } = useAuthStore()
   const { minimiPosts } = usePostsStore()
-  const { setClosestMinimi } = useMinimiStore()
+  const { setClosestMinimi, setPrevClosestMinimi } = useMinimiStore()
   const { setExecuteOptions } = useReadMinimiStore()
   const { initToggle } = useDeleteMinimiStore()
   const navigate = useNavigate()
@@ -59,6 +59,10 @@ function Dashbaord() {
         }
         return closest
       }, null)
+
+      if (!closestMinimi) {
+        setPrevClosestMinimi(null)
+      }
 
       setClosestMinimi(closestMinimi)
     }

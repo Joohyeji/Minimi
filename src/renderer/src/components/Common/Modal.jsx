@@ -1,9 +1,20 @@
 import useErrorStore from '../../store/useErrorStore'
+import useMinimiStore from '../../store/useMinimiStore'
+import updateComputerSetting from '../../utils/updateComputerSetting'
 
 const Modal = () => {
   const { isModalOpen, setIsModalOpen } = useErrorStore()
+  const { closestMinimi, currentComputerSetting } = useMinimiStore()
 
   const handleNoBtnClick = () => {
+    if (closestMinimi) {
+      const { brightness, volume, wallpaper, executables, bookmarks } = closestMinimi
+      updateComputerSetting(brightness, volume, wallpaper, executables, bookmarks)
+    } else {
+      const { brightness, volume, wallpaper } = currentComputerSetting
+
+      updateComputerSetting(brightness, volume, wallpaper)
+    }
     setIsModalOpen(false)
   }
 
