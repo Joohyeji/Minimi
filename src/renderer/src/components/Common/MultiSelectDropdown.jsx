@@ -14,9 +14,10 @@ const MultiSelectDropdown = ({ type, disabled }) => {
 
   const { setToastMessage, setVisible, isLoading, setLoading } = useErrorStore()
   const { executables, setExecutables, baseBookmarks, setBookmarks } = useMinimiStore()
-  const { executeOptions } = useReadMinimiStore()
+  const { executeOptions, addExecuteOptions } = useReadMinimiStore()
 
   const dropdownRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   const buttonText =
     type === 'bookmarks'
@@ -51,6 +52,20 @@ const MultiSelectDropdown = ({ type, disabled }) => {
           }
         }
       })
+    }
+  }
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files)
+    const newOptions = files.map((file) => ({
+      value: file.path,
+      label: file.name
+    }))
+    addExecuteOptions(newOptions)
+  }
+  const handleAddFileClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
     }
   }
 
@@ -141,9 +156,18 @@ const MultiSelectDropdown = ({ type, disabled }) => {
             <>
               {type !== 'bookmarks' ? (
                 <>
-                  <button className="w-full block px-4 py-1 bg-gray-100 font-medium hover:bg-black hover:text-white text-sm font-normal sticky top-0">
+                  <button
+                    onClick={handleAddFileClick}
+                    className="w-full block px-4 py-1 bg-gray-100 font-medium hover:bg-black hover:text-white text-sm font-normal sticky top-0"
+                  >
                     + Add File
                   </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                   {executeOptions.map((option) => (
                     <label
                       key={option.value}

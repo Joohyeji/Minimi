@@ -5,7 +5,13 @@ const useReadMinimiStore = create((set) => ({
   executeOptions: [],
 
   setExistingMinimiData: (minimiData) => set({ existingMinimiData: minimiData }),
-  setExecuteOptions: (options) => set({ executeOptions: options })
+  setExecuteOptions: (options) => set({ executeOptions: options }),
+  addExecuteOptions: (newOptions) => {
+    set((state) => {
+      const updatedOptions = [...state.executeOptions, ...newOptions]
+      return { executeOptions: updatedOptions }
+    })
+  }
 }))
 
 export default useReadMinimiStore
