@@ -152,7 +152,7 @@ function ReadMinimiCard() {
           <button onClick={handlePrevBtnClick} className="relative hover:translate-x-[-10px]">
             <img src={prev_icon} alt="Previous Icon" />
           </button>
-          <h1 className="ml-6 text-4xl font-bold">Make new Minimi</h1>
+          <h1 className="ml-6 text-4xl font-bold">Minimi Details</h1>
         </div>
         <section className="mt-5 w-full flex flex-col gap-5 p-2 pb-5 overflow-auto h-3/4">
           <SettingInput isOtherMinimi={true} />
