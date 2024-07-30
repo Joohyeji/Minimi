@@ -241,12 +241,12 @@ function CreateMinimi() {
         <button
           onMouseEnter={handleTooltip}
           onMouseLeave={() => setIsHovered(false)}
-          className="absolute right-4 top-4 z-10 px-2 text-sm font-light bg-black/50 rounded-full text-white flex items-center justify-center hover:bg-black"
+          className="absolute right-4 bottom-4 z-10 px-2 text-sm font-light bg-black/60 rounded-full text-white flex items-center justify-center hover:bg-black"
         >
           현재 위치가 아닌가요?
         </button>
         <div
-          className={`absolute right-4 top-10 mb-2 bg-gray-800 text-white text-center text-sm font-regular rounded py-1 px-2 z-20 transition-opacity duration-300 ${
+          className={`absolute right-4 bottom-8 mb-2 bg-gray-800 text-white text-center text-sm font-regular rounded py-1 px-2 z-20 transition-opacity duration-300 ${
             showTooltip ? 'opacity-100' : 'opacity-0'
           }`}
         >

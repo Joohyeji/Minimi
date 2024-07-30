@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useEffect, useRef } from 'react'
-import { GoogleMap, useJsApiLoader, MarkerF, Circle } from '@react-google-maps/api'
+import { GoogleMap, useJsApiLoader, MarkerF, Circle, Autocomplete } from '@react-google-maps/api'
 import useErrorStore from '../../store/useErrorStore'
 import useMinimiStore from '../../store/useMinimiStore'
 import useAuthStore from '../../store/useAuthStore'
@@ -11,6 +11,7 @@ import { GOOGLE_MAPS_LIBRARIES, PIN_SIZE, RADIUS } from '../../constants/constan
 
 function Map({ isSettingMap, isOtherMinimi }) {
   const mapRef = useRef(null)
+  const autocompleteRef = useRef(null)
 
   const { nowLocation, setNowLocation } = useAuthStore()
   const { setToastMessage, setVisible } = useErrorStore()
@@ -74,6 +75,25 @@ function Map({ isSettingMap, isOtherMinimi }) {
     mapRef.current = map
   }
 
+  const handlePlaceChanged = () => {
+    const place = autocompleteRef.current.getPlace()
+    if (place.geometry) {
+      const newPosition = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      }
+      setMarkerPosition(newPosition)
+      fetchPlaceName(newPosition)
+
+      setToastMessage('이 위치로 변경되었습니다.')
+      setVisible(true)
+
+      if (isSettingMap) {
+        setNowLocation(newPosition)
+      }
+    }
+  }
+
   const mapContainerStyle = {
     width: '100%',
     height: '100%'
@@ -101,6 +121,16 @@ function Map({ isSettingMap, isOtherMinimi }) {
           onClick={isOtherMinimi ? null : handleMapClick}
           options={options}
         >
+          <Autocomplete
+            onLoad={(ref) => (autocompleteRef.current = ref)}
+            onPlaceChanged={handlePlaceChanged}
+          >
+            <input
+              type="text"
+              placeholder="Search for a location"
+              className="box-border border border-transparent w-60 h-8 px-3 rounded-md shadow-md text-base outline-none text-ellipsis absolute left-1/2 -translate-x-1/2 mt-2"
+            />
+          </Autocomplete>
           <Circle center={markerPosition} options={circleOptions} />
           <MarkerF
             position={markerPosition}
