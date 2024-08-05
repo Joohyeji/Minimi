@@ -126,7 +126,6 @@ function UserInfo({ userName }) {
             <div className="flex gap-2">
               {!isTimerToggle && (
                 <select className="cursor-pointer bg-black" ref={selectRef}>
-                  <option value="10000">10 초</option>
                   <option value="600000">10 분</option>
                   <option value="1800000">30 분</option>
                   <option value="3600000">1 시간</option>

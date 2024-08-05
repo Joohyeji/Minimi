@@ -9,7 +9,6 @@ function Search() {
     const value = e.target.value
     setSearchValue(value)
     setSearchQuery(value)
-    console.log(value)
   }
 
   return (

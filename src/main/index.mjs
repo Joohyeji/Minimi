@@ -26,7 +26,8 @@ function createWindow() {
       sandbox: false,
       contextIsolation: true,
       enableRemoteModule: false
-    }
+    },
+    icon: path.join(__dirname, '../../resources/icon.png')
   })
 
   mainWindow.loadURL('https://localhost:5173')

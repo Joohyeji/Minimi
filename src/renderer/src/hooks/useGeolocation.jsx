@@ -15,7 +15,6 @@ const useGeoLocation = () => {
           (position) => {
             const { latitude, longitude } = position.coords
             setNowLocation({ lat: latitude, lng: longitude })
-            console.log('현재 위치가 업데이트되었습니다', latitude, longitude)
           },
           (error) => {
             setToastMessage(`현재 위치 가져오기에 실패했습니다. ${error.message}`)
