@@ -143,7 +143,7 @@ app.whenReady().then(() => {
     }
   })
 
-  ipcMain.handle('get-wallpaper', async (event) => {
+  ipcMain.handle('get-wallpaper', async () => {
     try {
       const { getWallpaper } = await import('wallpaper')
       const currentWallpaper = await getWallpaper()
