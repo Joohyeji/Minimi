@@ -17,7 +17,7 @@
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run --coverage"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
