@@ -9,7 +9,13 @@ export default defineConfig({
     coverage: {
       reporter: ['text', 'json', 'html'],
       include: ['src/**/*.jsx', 'src/**/*.js'],
-      exclude: ['node_modules/', 'test/', 'src/firebase.js', 'src/preload']
+      exclude: [
+        'node_modules/',
+        'test/',
+        'src/firebase.js',
+        'src/preload',
+        'src/renderer/src/main.jsx'
+      ]
     }
   }
 })
