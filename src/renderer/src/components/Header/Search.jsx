@@ -12,7 +12,7 @@ function Search() {
   }
 
   return (
-    <form className="w-6/12">
+    <form className="w-6/12" data-testid="search-component">
       <input
         type="text"
         placeholder="Search..."

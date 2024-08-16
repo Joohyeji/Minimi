@@ -1,6 +1,9 @@
 function Loading() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
+    <div
+      className="absolute inset-0 flex items-center justify-center"
+      data-testid="loading-spinner"
+    >
       <svg
         className="w-12 h-12 text-gray-300 animate-spin"
         viewBox="0 0 64 64"
