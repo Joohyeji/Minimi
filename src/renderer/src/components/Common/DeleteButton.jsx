@@ -36,6 +36,7 @@ function DeleteButton({ uid, onFetch }) {
       className={`flex items-center border rounded-full drop-shadow-md p-2 fixed bottom-7 right-7 transition-all ${
         isToggle ? 'bg-black shadow-inner' : 'border-slate-50 bg-white'
       } hover:drop-shadow-sm`}
+      data-testid="delete-button"
     >
       <svg
         className={`h-[35px] ${isToggle ? 'fill-white' : 'fill-black'}`}
