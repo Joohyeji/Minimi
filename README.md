@@ -83,8 +83,8 @@
 
 ### Insight 발견하기
 
-<div align="center" style="width: 200px">
-  <img alt="단축어" src="./src/renderer/src/docs/단축어.png" />
+<div align="center">
+  <img alt="단축어" src="./src/renderer/src/docs/단축어.png" style="height:300px" />
   <p style="font-size: 14px">출처: apple 공식 홈페이지</p>
 </div>
 
