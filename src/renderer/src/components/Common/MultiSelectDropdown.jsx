@@ -144,6 +144,7 @@ const MultiSelectDropdown = ({ type, disabled }) => {
       <button
         onClick={disabled ? null : handleToggle}
         className="text-base font-medium leading-7 border rounded bg-black text-white px-2 cursor-pointer hover:bg-neutral-700 truncate flex items-center justify-between w-full"
+        disabled={disabled}
       >
         {buttonText}
         <span className={`ml-2 ${isOpen ? 'rotate-180' : 'rotate-0'} transition-transform`}>
