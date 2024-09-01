@@ -10,6 +10,7 @@ import useErrorStore from '../../store/useErrorStore'
 import GoogleBtn from './GoogleBtn'
 import Input from './Input'
 import ErrorText from '../Common/ErrorText'
+import Loading from '../Common/Loading'
 
 function SignIn() {
   const [name, setName] = useState('')
@@ -18,7 +19,8 @@ function SignIn() {
   const [passwordCheck, setPasswordCheck] = useState('')
   const navigate = useNavigate()
 
-  const { setVisible, setToastMessage, setErrorText, errorText } = useErrorStore()
+  const { isLoading, setLoading, setVisible, setToastMessage, setErrorText, errorText } =
+    useErrorStore()
 
   const handleSubmitSignIn = async (e) => {
     e.preventDefault()
@@ -44,6 +46,8 @@ function SignIn() {
     }
 
     try {
+      setLoading(true)
+
       const createdUser = await createUserWithEmailAndPassword(auth, email, password)
 
       await updateProfile(auth.currentUser, {
@@ -77,12 +81,15 @@ function SignIn() {
           setVisible(true)
           break
       }
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-6 px-24 pb-20">
       <h1 className="text-5xl font-black">Create new Account</h1>
+      {isLoading && <Loading />}
       <GoogleBtn />
       <p className="text-neutral-500">or</p>
       <form
