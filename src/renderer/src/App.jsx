@@ -19,7 +19,7 @@ function App() {
       <div className="pt-5 h-full">
         <Modal />
         <Header />
-        <div className="px-12 mt-10">
+        <div className="px-12 mt-8">
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/signin" element={<SignIn />} />

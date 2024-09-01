@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -22,28 +22,48 @@ function SignIn() {
   const { isLoading, setLoading, setVisible, setToastMessage, setErrorText, errorText } =
     useErrorStore()
 
+  const handleNameChange = (e) => {
+    const value = e.target.value
+    setName(value)
+
+    if (!validateName(value)) {
+      setErrorText('name', '닉네임은 20자 이하이며, 공백이 존재하지 않아야합니다.')
+    } else {
+      setErrorText('name', '')
+    }
+  }
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value
+    setEmail(value)
+
+    setErrorText('email', '')
+  }
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value
+    setPassword(value)
+
+    if (!validatePassword(value)) {
+      setErrorText('password', '비밀번호에 공백을 포함할 수 없습니다.')
+    } else {
+      setErrorText('password', '')
+    }
+  }
+
+  const handlePasswordCheckChange = (e) => {
+    const value = e.target.value
+    setPasswordCheck(value)
+
+    if (value !== password) {
+      setErrorText('passwordCheck', '비밀번호가 일치하지 않습니다.')
+    } else {
+      setErrorText('passwordCheck', '')
+    }
+  }
+
   const handleSubmitSignIn = async (e) => {
     e.preventDefault()
-
-    setErrorText('name', '')
-    setErrorText('email', '')
-    setErrorText('password', '')
-    setErrorText('passwordCheck', '')
-
-    if (!validateName(name)) {
-      setErrorText('name', '닉네임은 20자 이하이며, 공백이 존재하지 않아야합니다.')
-      return
-    }
-
-    if (!validatePassword(password)) {
-      setErrorText('password', '비밀번호에 공백을 포함할 수 없습니다.')
-      return
-    }
-
-    if (password !== passwordCheck) {
-      setErrorText('passwordCheck', '비밀번호가 일치하지 않습니다.')
-      return
-    }
 
     try {
       setLoading(true)
@@ -86,6 +106,16 @@ function SignIn() {
     }
   }
 
+  useEffect(() => {
+    setErrorText('name', '')
+    setErrorText('email', '')
+    setErrorText('password', '')
+    setErrorText('passwordCheck', '')
+  }, [])
+
+  const isSubmitDisabled =
+    !!errorText.name || !!errorText.email || !!errorText.password || !!errorText.passwordCheck
+
   return (
     <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-6 px-24 pb-20">
       <h1 className="text-5xl font-black">Create new Account</h1>
@@ -96,37 +126,33 @@ function SignIn() {
         onSubmit={handleSubmitSignIn}
         className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4"
       >
-        <Input
-          type="text"
-          placeholder="Enter name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <Input type="text" placeholder="Enter name" value={name} onChange={handleNameChange} />
         <ErrorText message={errorText.name} />
         <Input
           type="email"
           placeholder="Enter email address"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
         />
         <ErrorText message={errorText.email} />
         <Input
           type="password"
           placeholder="Enter password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
         />
         <ErrorText message={errorText.password} />
         <Input
           type="password"
           placeholder="Confirm password"
           value={passwordCheck}
-          onChange={(e) => setPasswordCheck(e.target.value)}
+          onChange={handlePasswordCheckChange}
         />
         <ErrorText message={errorText.passwordCheck} />
         <button
           type="submit"
-          className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg mt-10 font-bold hover:bg-neutral-700"
+          className="block h-12 min-w-96 rounded-xl bg-black text-white shadow-lg mt-10 font-bold hover:bg-neutral-700 disabled:bg-neutral-700 disabled:cursor-not-allowed"
+          disabled={isSubmitDisabled}
         >
           Sign in
         </button>
