@@ -16,7 +16,7 @@
     <br />
     <h3><strong>Links</strong></h3>
     <div style="margin: 0 auto;">
-    <a href="https://github.com/Joohyeji/Minimi/releases/tag/v.1.0.0" target="_blank"><img alt="Static Badge" src="https://img.shields.io/badge/v1.0.0%20Release-%23333333?style=for-the-badge&logo=electron&logoColor=white&color=%23333333&link=https%3A%2F%2Fgithub.com%2FJoohyeji%2FMinimi%2Freleases%2Ftag%2Fv.1.0.0"></a>
+    <a href="https://github.com/Joohyeji/Minimi/tags" target="_blank"><img alt="Static Badge" src="https://img.shields.io/badge/Download-%23333333?style=for-the-badge&logo=electron&logoColor=white&color=%23333333"></a>
     <a href="https://www.notion.so/Minimi-e2ba7b7553d04020a114b0cac9d115cf" target="_blank">
     <img alt="Static Badge" src="https://img.shields.io/badge/Notion-%23333333?style=for-the-badge&logo=notion&logoColor=white&color=%23333333&link=https://hollow-mouth-d0c.notion.site/Minimi-e2ba7b7553d04020a114b0cac9d115cf?pvs=4"></a>
     </div>
