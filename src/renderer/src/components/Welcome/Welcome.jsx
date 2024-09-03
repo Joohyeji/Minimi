@@ -62,8 +62,8 @@ function Welcome() {
         MNM 은 개인 맞춤형 PC 환경을 제공하는 서비스입니다. <br />
         자신만의 루틴을 세우고 편리한 기능을 제공받으세요!
       </p>
-      <GoogleBtn />
-      <p className="text-gray-500">or</p>
+      {/* <GoogleBtn /> */}
+      <p className="text-gray-500"> </p>
       <form
         onSubmit={handleLogInSubmit}
         className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4"

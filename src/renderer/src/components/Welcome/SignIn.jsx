@@ -120,8 +120,8 @@ function SignIn() {
     <div className="flex flex-col justify-between justify-center w-full h-full items-center gap-6 px-24 pb-20">
       <h1 className="text-5xl font-black">Create new Account</h1>
       {isLoading && <Loading />}
-      <GoogleBtn />
-      <p className="text-neutral-500">or</p>
+      {/* <GoogleBtn /> */}
+      <p className="text-neutral-500"> </p>
       <form
         onSubmit={handleSubmitSignIn}
         className="w-5/12 min-w-96 flex flex-col justify-between justify-center gap-4"
