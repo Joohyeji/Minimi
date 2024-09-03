@@ -1,7 +1,7 @@
 {
   "name": "minimi",
-  "version": "1.0.0",
-  "description": "An Electron application with React",
+  "version": "1.0.1",
+  "description": "위치 기반 노트북 세팅 자동화 어플리케이션입니다.",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://electron-vite.org",
