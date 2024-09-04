@@ -50,4 +50,10 @@ describe('MultiSelectDropdown Component', () => {
       expect(addButton).not.toBeInTheDocument()
     })
   })
+
+  it('disables dropdown button when disabled prop is true', () => {
+    render(<MultiSelectDropdown type="executables" disabled={true} />)
+    const button = screen.getByTestId('dropdown-button')
+    expect(button).toBeDisabled()
+  })
 })
