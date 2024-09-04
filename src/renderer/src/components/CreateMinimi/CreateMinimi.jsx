@@ -13,6 +13,7 @@ import useReadMinimiStore from '../../store/useReadMinimiStore'
 
 import SettingInput from './SettingInput'
 import SettingCard from './SettingCard'
+import Loading from '../Common/Loading'
 import Map from './Map'
 import prev_icon from '../../assets/img/previous_icon.png'
 import { SETTING_CARD_LISTS } from '../../constants/constants'
@@ -25,7 +26,7 @@ function CreateMinimi() {
   const [showTooltip, setShowTooltip] = useState(false)
 
   const { user } = useAuthStore()
-  const { setErrorText, setVisible, setToastMessage } = useErrorStore()
+  const { isLoading, setLoading, setErrorText, setVisible, setToastMessage } = useErrorStore()
   const { existingMinimiData, setExistingMinimiData } = useReadMinimiStore()
   const {
     markerPosition,
@@ -68,6 +69,10 @@ function CreateMinimi() {
       setErrorText('minimiName', '공백만으로 이루어질 수 없습니다.')
       return
     }
+    if (settingInputLists.length === 0) {
+      setErrorText('minimiName', '최소 하나의 설정이 있어야 합니다.')
+      return
+    }
 
     let wallpaperUrl = null
 
@@ -96,6 +101,7 @@ function CreateMinimi() {
     }
 
     try {
+      setLoading(true)
       if (id) {
         const minimiDocRef = doc(MINIMIES_COLLECTION, id)
         await setDoc(minimiDocRef, minimiData)
@@ -112,6 +118,8 @@ function CreateMinimi() {
     } catch (error) {
       setToastMessage(`저장 중 오류가 발생했습니다. ${error}`)
       setVisible(true)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -212,6 +220,7 @@ function CreateMinimi() {
 
   return (
     <div className="flex">
+      {isLoading && <Loading />}
       <div className="w-3/5">
         <div className="flex items-center -mt-5 relative">
           <button onClick={handlePrevBtnClick} className="relative hover:translate-x-[-10px]">
@@ -232,7 +241,8 @@ function CreateMinimi() {
         </section>
         <button
           onClick={handleDoneBtnClick}
-          className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700"
+          className="absolute bottom-7 w-[150px] bg-black text-white px-5 py-3 rounded-full text-lg font-bold hover:bg-neutral-700 disabled:cursor-not-allowed"
+          disabled={isLoading}
         >
           DONE .
         </button>
